@@ -1,0 +1,29 @@
+language: php
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.1
+    - php: 7.2
+
+before_install:
+  - phpenv config-rm xdebug.ini
+  - composer self-update
+
+install:
+  - composer install
+
+script:
+  # this checks that the YAML config files contain no syntax errors
+  - ./bin/console lint:yaml app/config
+  # this checks that the Twig template files contain no syntax errors
+  - ./bin/console lint:twig app/Resources/views
+  # this checks that the application doesn't use dependencies with known security vulnerabilities
+  - ./bin/console security:check
+  # this checks that Doctrine's mapping configurations are valid
+  - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
