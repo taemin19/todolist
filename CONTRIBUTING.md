@@ -40,7 +40,12 @@ Before you submit your Pull Request (PR) consider the following guidelines:
      ```
 
 4. Add your code, **including appropriate test cases**.
-5. Follow our [Coding Rules](#rules).
+5. Follow our [Coding Rules](#rules):
+
+    ```shell
+    make cs-fixer
+    ```
+
 6. Ensure that all tests pass.
 7. Commit your changes using a descriptive commit message that follows our
   [commit message conventions](#commit).

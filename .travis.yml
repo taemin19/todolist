@@ -19,6 +19,8 @@ install:
   - composer install
 
 script:
+  # this checks that the source code follows the Symfony Code Syntax rules
+  - ./vendor/bin/php-cs-fixer fix --diff --dry-run -v
   # this checks that the YAML config files contain no syntax errors
   - ./bin/console lint:yaml app/config
   # this checks that the Twig template files contain no syntax errors

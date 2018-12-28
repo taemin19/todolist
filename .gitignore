@@ -1,3 +1,4 @@
+/.php_cs
 /app/config/parameters.yml
 /app/test.db3
 /build/

@@ -64,12 +64,15 @@ server-i: ## Check if the PHP's built-in web server is listening
 	php bin/console server:status
 
 ## Test commands
-
 test-f: features ## Run functional tests, [FEATURE=example.feature] to test a specific feature
 	vendor/bin/behat features/$(FEATURE)
 
 test-u: tests ## Run unit tests, [TEST=Dir[/Test.php]] to test a directory or a specific test file
 	php ./bin/phpunit tests/$(TEST)
+
+## Coding standards commands
+cs-fixer: .php_cs ## Run PHP CS Fixer
+	php-cs-fixer fix -v
 
 ## Blackfire commands
 blackfire: ## Profile HTTP request, [ROUTE=path]* (required*)
