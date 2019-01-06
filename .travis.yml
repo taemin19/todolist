@@ -17,6 +17,7 @@ before_install:
 
 install:
   - composer install
+  - ./bin/phpunit install
 
 script:
   # this checks that the source code follows the Symfony Code Syntax rules
@@ -29,3 +30,5 @@ script:
   - ./bin/console security:check
   # this checks that Doctrine's mapping configurations are valid
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
+  # this checks that Unit tests are correctly executed
+  - ./bin/phpunit
