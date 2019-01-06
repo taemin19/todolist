@@ -29,5 +29,8 @@ script:
   - ./bin/console security:check
   # this checks that Doctrine's mapping configurations are valid
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
+  # this creates the test database and add tables/schema
+  - ./bin/console doctrine:database:create --env=test
+  - ./bin/console doctrine:schema:update --force --env=test
   # this checks that Unit tests are correctly executed
   - ./vendor/bin/simple-phpunit
