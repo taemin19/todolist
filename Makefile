@@ -29,8 +29,8 @@ db--test: app/config/config_test.yml ## Create the test database and add tables/
 db-v: ## Validate mapping/database
 	php bin/console doctrine:schema:validate
 
-db-f: src/AppBundle/Resources/fixtures ## Load a "fake" set data into the database
-	php bin/console doctrine:fixtures:load
+db-f: src/AppBundle/DataFixtures ## Load a "fake" set data into the database
+	php bin/console doctrine:fixtures:load --purge-with-truncate
 
 ## Symfony commands
 cache: var/cache ## Clear the cache in the current environment
@@ -68,11 +68,20 @@ test-f: features ## Run functional tests, [FEATURE=example.feature] to test a sp
 	vendor/bin/behat features/$(FEATURE)
 
 test-u: tests ## Run unit tests, [TEST=Dir[/Test.php]] to test a directory or a specific test file
-	php ./bin/phpunit tests/$(TEST)
+	./vendor/bin/simple-phpunit tests/AppBundle/$(TEST)
+
+test-c: tests ## Generate code coverage report in HTML format
+	./vendor/bin/simple-phpunit --coverage-html web/test-coverage
 
 ## Coding standards commands
 cs-fixer: .php_cs ## Run PHP CS Fixer
 	php-cs-fixer fix -v
+
+cs-lint:
+	php bin/console security:check
+	php bin/console lint:yaml app/config
+	php bin/console lint:twig app/Resources/views
+	php bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
 
 ## Blackfire commands
 blackfire: ## Profile HTTP request, [ROUTE=path]* (required*)
