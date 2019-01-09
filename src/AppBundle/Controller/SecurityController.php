@@ -2,26 +2,46 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends Controller
+class SecurityController
 {
     /**
-     * @Route("/login", name="login")
+     * @var \Twig_Environment
      */
-    public function loginAction(Request $request)
+    private $twig;
+
+    /**
+     * SecurityController constructor.
+     *
+     * @param \Twig_Environment $twig
+     */
+    public function __construct(\Twig_Environment $twig)
     {
-        $authenticationUtils = $this->get('security.authentication_utils');
+        $this->twig = $twig;
+    }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
-        ]);
+    /**
+     * @Route("/login", name="login")
+     *
+     * @param AuthenticationUtils $authenticationUtils
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return Response
+     */
+    public function loginAction(AuthenticationUtils $authenticationUtils)
+    {
+        return new Response(
+            $this->twig->render('security/login.html.twig', [
+                'last_username' => $authenticationUtils->getLastUsername(),
+                'error' => $authenticationUtils->getLastAuthenticationError(),
+            ])
+        );
     }
 
     /**

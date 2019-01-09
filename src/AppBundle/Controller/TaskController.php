@@ -4,91 +4,173 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
-class TaskController extends Controller
+class TaskController
 {
     /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * TaskController constructor.
+     *
+     * @param \Twig_Environment      $twig
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(\Twig_Environment $twig, EntityManagerInterface $entityManager)
+    {
+        $this->twig = $twig;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * @Route("/tasks", name="task_list")
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return Response
      */
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->findAll()]);
+        return new Response(
+            $this->twig->render('task/list.html.twig', [
+                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findAll(),
+            ])
+        );
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
+     *
+     * @param FormFactoryInterface $formFactory
+     * @param Request              $request
+     * @param FlashBagInterface    $flashBag
+     * @param RouterInterface      $router
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return RedirectResponse|Response
      */
-    public function createAction(Request $request)
+    public function createAction(FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
     {
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
 
+        $form = $formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($task);
+            $this->entityManager->flush();
 
-            $em->persist($task);
-            $em->flush();
+            $flashBag->add('success', 'La tâche a été bien été ajoutée.');
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
-
-            return $this->redirectToRoute('task_list');
+            return new RedirectResponse(
+                $router->generate('task_list')
+            );
         }
 
-        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+        return new Response(
+            $this->twig->render('task/create.html.twig', [
+                'form' => $form->createView(),
+            ])
+        );
     }
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     *
+     * @param FormFactoryInterface $formFactory
+     * @param Request              $request
+     * @param FlashBagInterface    $flashBag
+     * @param Task                 $task
+     * @param RouterInterface      $router
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return RedirectResponse|Response
      */
-    public function editAction(Task $task, Request $request)
+    public function editAction(FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, Task $task, RouterInterface $router)
     {
-        $form = $this->createForm(TaskType::class, $task);
-
+        $form = $formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+            $flashBag->add('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return new RedirectResponse(
+                $router->generate('task_list')
+            );
         }
 
-        return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
-            'task' => $task,
-        ]);
+        return new Response(
+            $this->twig->render('task/edit.html.twig', [
+                'form' => $form->createView(),
+                'task' => $task,
+            ])
+        );
     }
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     *
+     * @param Task              $task
+     * @param FlashBagInterface $flashBag
+     * @param RouterInterface   $router
+     *
+     * @return RedirectResponse
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router)
     {
         $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $this->entityManager->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return new RedirectResponse(
+            $router->generate('task_list')
+        );
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     *
+     * @param Task              $task
+     * @param FlashBagInterface $flashBag
+     * @param RouterInterface   $router
+     *
+     * @return RedirectResponse
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $flashBag->add('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return new RedirectResponse(
+            $router->generate('task_list')
+        );
     }
 }
