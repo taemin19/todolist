@@ -18,6 +18,9 @@ class UserTypeTest extends TypeTestCase
     /**
      * This helper method mocks the ValidatorExtension.
      *
+     *
+     * @throws \ReflectionException
+     *
      * @return array
      */
     protected function getExtensions()
