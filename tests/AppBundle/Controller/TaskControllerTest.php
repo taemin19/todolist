@@ -20,7 +20,7 @@ class TaskControllerTest extends TestCase
 {
     /**
      * This test checks that the method listAction() is correctly returned
-     * and checks that the methods render(), getRepository(), findAll() are correctly called.
+     * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
      * @throws \Twig_Error_Loader
@@ -29,32 +29,28 @@ class TaskControllerTest extends TestCase
      */
     public function testList()
     {
-        $objectRepositoryMock = $this->createMock(ObjectRepository::class);
-        $objectRepositoryMock->expects($this->once())
+        $objectRepository = $this->createMock(ObjectRepository::class);
+        $objectRepository->expects($this->once())
             ->method('findAll');
 
-        $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($this->once())
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->once())
             ->method('getRepository')
             ->with('AppBundle:Task')
-            ->willReturn($objectRepositoryMock);
+            ->willReturn($objectRepository);
 
-        $twigMock = $this->createMock(\Twig_Environment::class);
-        $twigMock->expects($this->once())
-            ->method('render')
-            ->with('task/list.html.twig', [
-                'tasks' => null,
-            ]);
+        $twig = $this->getTwigMock(true, 'task/list.html.twig', [
+            'tasks' => null,
+        ]);
 
-        $controller = new TaskController($twigMock, $entityManagerMock);
+        $controller = new TaskController($twig, $entityManager);
 
         $this->assertInstanceOf(Response::class, $controller->listAction());
     }
 
     /**
      * This test checks that the method createAction() is correctly returned
-     * and checks that the methods create(), handleRequest(), isSubmitted(), isValid(),
-     * persist(), flush(), add(), generate(), render(), createView() are correctly called or not.
+     * and checks that the methods are correctly called or not.
      *
      * @param string $className
      * @param bool   $formIsSubmitted
@@ -67,56 +63,32 @@ class TaskControllerTest extends TestCase
      */
     public function testCreate(bool $formIsSubmitted, string $className)
     {
-        $requestMock = $this->createMock(Request::class);
+        $task = new Task();
 
-        $formMock = $this->createMock(FormInterface::class);
-        $formMock->expects($this->once())
-            ->method('handleRequest')
-            ->with($requestMock);
-        $formMock->expects($this->once())
-            ->method('isSubmitted')->willReturn($formIsSubmitted);
-        $formMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('isValid')->willReturn($formIsSubmitted);
-        $formMock->expects($formIsSubmitted ? $this->never() : $this->once())
-            ->method('createView');
+        $request = $this->createMock(Request::class);
 
-        $formFactoryMock = $this->createMock(FormFactoryInterface::class);
-        $formFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(TaskType::class)
-            ->willReturn($formMock);
+        $form = $this->getFormMock($formIsSubmitted, $request);
 
-        $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('persist');
-        $entityManagerMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('flush');
+        $formFactory = $this->getFormInterfaceMock($form);
 
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-        $flashBagMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('add')
-            ->with('success', 'La tâche a bien été ajoutée.');
+        $entityManager = $this->getEntityManagerMock($formIsSubmitted, false, $formIsSubmitted, $task);
 
-        $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('generate')
-            ->with('task_list')
-            ->willReturn('/');
+        $flashBag = $this->getFlashBagMock($formIsSubmitted, 'success', 'La tâche a bien été ajoutée.');
 
-        $twigMock = $this->createMock(\Twig_Environment::class);
-        $twigMock->expects($formIsSubmitted ? $this->never() : $this->once())
-            ->method('render')
-            ->with('task/create.html.twig');
+        $router = $this->getRouterMock($formIsSubmitted, 'task_list');
 
-        $controller = new TaskController($twigMock, $entityManagerMock);
+        $twig = $this->getTwigMock(!$formIsSubmitted, 'task/create.html.twig', [
+            'form' => null,
+        ]);
 
-        $this->assertInstanceOf($className, $controller->createAction($formFactoryMock, $requestMock, $flashBagMock, $routerMock));
+        $controller = new TaskController($twig, $entityManager);
+
+        $this->assertInstanceOf($className, $controller->createAction($formFactory, $request, $flashBag, $router));
     }
 
     /**
-     * This test checks that the method EditAction() is correctly returned
-     * and checks that the methods create(), handleRequest(), isSubmitted(), isValid(),
-     * flush(), add(), generate(), render(), createView() are correctly called or not.
+     * This test checks that the method editAction() is correctly returned
+     * and checks that the methods are correctly called or not.
      *
      * @param string $className
      * @param bool   $formIsSubmitted
@@ -131,48 +103,26 @@ class TaskControllerTest extends TestCase
     {
         $task = new Task();
 
-        $requestMock = $this->createMock(Request::class);
+        $request = $this->createMock(Request::class);
 
-        $formMock = $this->createMock(FormInterface::class);
-        $formMock->expects($this->once())
-            ->method('handleRequest')
-            ->with($requestMock);
-        $formMock->expects($this->once())
-            ->method('isSubmitted')->willReturn($formIsSubmitted);
-        $formMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('isValid')->willReturn($formIsSubmitted);
-        $formMock->expects($formIsSubmitted ? $this->never() : $this->once())
-            ->method('createView');
+        $form = $this->getFormMock($formIsSubmitted, $request);
 
-        $formFactoryMock = $this->createMock(FormFactoryInterface::class);
-        $formFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(TaskType::class, $task)
-            ->willReturn($formMock);
+        $formFactory = $this->getFormInterfaceMock($form);
 
-        $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('flush');
+        $entityManager = $this->getEntityManagerMock(false, false, $formIsSubmitted, $task);
 
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-        $flashBagMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('add')
-            ->with('success', 'La tâche a bien été modifiée.');
+        $flashBag = $this->getFlashBagMock($formIsSubmitted, 'success', 'La tâche a bien été modifiée.');
 
-        $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($formIsSubmitted ? $this->once() : $this->never())
-            ->method('generate')
-            ->with('task_list')
-            ->willReturn('/');
+        $router = $this->getRouterMock($formIsSubmitted, 'task_list');
 
-        $twigMock = $this->createMock(\Twig_Environment::class);
-        $twigMock->expects($formIsSubmitted ? $this->never() : $this->once())
-            ->method('render')
-            ->with('task/edit.html.twig');
+        $twig = $this->getTwigMock(!$formIsSubmitted, 'task/edit.html.twig', [
+            'form' => null,
+            'task' => $task,
+        ]);
 
-        $controller = new TaskController($twigMock, $entityManagerMock);
+        $controller = new TaskController($twig, $entityManager);
 
-        $this->assertInstanceOf($className, $controller->editAction($formFactoryMock, $task, $requestMock, $flashBagMock, $routerMock));
+        $this->assertInstanceOf($className, $controller->editAction($formFactory, $task, $request, $flashBag, $router));
     }
 
     /**
@@ -187,9 +137,8 @@ class TaskControllerTest extends TestCase
     }
 
     /**
-     * This test checks that the method ToggleAction() is correctly returned
-     * and checks that the methods toggle(), isDone(), flush(), add(), getTile, add(), generate()
-     * are correctly called.
+     * This test checks that the method toggleAction() is correctly returned
+     * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
      */
@@ -197,31 +146,22 @@ class TaskControllerTest extends TestCase
     {
         $task = new Task();
 
-        $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($this->once())
-            ->method('flush');
+        $entityManager = $this->getEntityManagerMock(false, false, true, $task);
 
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-        $flashBagMock->expects($this->once())
-            ->method('add')
-            ->with('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $flashBag = $this->getFlashBagMock(true, 'success', sprintf('La tâche %s a bien été marquée comme faite.', ''));
 
-        $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($this->once())
-            ->method('generate')
-            ->with('task_list')
-            ->willReturn('/');
+        $router = $this->getRouterMock(true, 'task_list');
 
-        $twigMock = $this->createMock(\Twig_Environment::class);
+        $twig = $this->getTwigMock(false);
 
-        $controller = new TaskController($twigMock, $entityManagerMock);
+        $controller = new TaskController($twig, $entityManager);
 
-        $this->assertInstanceOf(RedirectResponse::class, $controller->toggleTaskAction($task, $flashBagMock, $routerMock));
+        $this->assertInstanceOf(RedirectResponse::class, $controller->toggleTaskAction($task, $flashBag, $router));
     }
 
     /**
-     * This test checks that the method DeleteAction() is correctly returned
-     * and checks that the methods remove(), add(), flush(), generate() are correctly called.
+     * This test checks that the method deleteAction() is correctly returned
+     * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
      */
@@ -229,28 +169,157 @@ class TaskControllerTest extends TestCase
     {
         $task = new Task();
 
+        $entityManager = $this->getEntityManagerMock(false, true, true, $task);
+
+        $flashBag = $this->getFlashBagMock(true, 'success', 'La tâche a bien été supprimée.');
+
+        $router = $this->getRouterMock(true, 'task_list');
+
+        $twig = $this->getTwigMock(false);
+
+        $controller = new TaskController($twig, $entityManager);
+
+        $this->assertInstanceOf(RedirectResponse::class, $controller->deleteTaskAction($task, $flashBag, $router));
+    }
+
+    /**
+     * This helper method mocks Twig_Environment
+     * and checks that render() is correctly called or not called.
+     *
+     * @param bool   $callRender
+     * @param string $template
+     * @param array  $parameters
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Twig_Environment
+     */
+    private function getTwigMock(bool $callRender, string $template = '', array $parameters = [])
+    {
+        $twigMock = $this->createMock(\Twig_Environment::class);
+        $twigMock->expects($callRender ? $this->once() : $this->never())
+            ->method('render')
+            ->with($template, $parameters);
+
+        return $twigMock;
+    }
+
+    /**
+     * This helper method mocks FormFactoryInterface
+     * and checks that create() is correctly called.
+     *
+     * @param $form
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|FormFactoryInterface
+     */
+    private function getFormInterfaceMock($form)
+    {
+        $formFactoryMock = $this->createMock(FormFactoryInterface::class);
+        $formFactoryMock->expects($this->once())
+            ->method('create')
+            ->with(TaskType::class)
+            ->willReturn($form);
+
+        return $formFactoryMock;
+    }
+
+    /**
+     * This helper method mocks FormInterface
+     * and checks that handleRequest(), isSubmitted(), isValid(), createView() are correctly called or not called.
+     *
+     * @param bool $formIsSubmitted
+     * @param $request
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|FormInterface
+     */
+    private function getFormMock(bool $formIsSubmitted, $request)
+    {
+        $formMock = $this->createMock(FormInterface::class);
+        $formMock->expects($this->once())
+            ->method('handleRequest')
+            ->with($request);
+        $formMock->expects($this->once())
+            ->method('isSubmitted')->willReturn($formIsSubmitted);
+        $formMock->expects($formIsSubmitted ? $this->once() : $this->never())
+            ->method('isValid')->willReturn($formIsSubmitted);
+        $formMock->expects($formIsSubmitted ? $this->never() : $this->once())
+            ->method('createView');
+
+        return $formMock;
+    }
+
+    /**
+     * This helper method mocks EntityManagerInterface
+     * and checks that persist(), remove(), flush() are correctly called or not called.
+     *
+     * @param bool $callPersist
+     * @param bool $callRemove
+     * @param bool $callFlush
+     * @param Task $task
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|EntityManagerInterface
+     */
+    private function getEntityManagerMock(bool $callPersist, bool $callRemove, bool $callFlush, Task $task)
+    {
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($this->once())
+        $entityManagerMock->expects($callPersist ? $this->once() : $this->never())
+            ->method('persist');
+        $entityManagerMock->expects($callRemove ? $this->once() : $this->never())
             ->method('remove')
             ->with($task);
-        $entityManagerMock->expects($this->once())
+        $entityManagerMock->expects($callFlush ? $this->once() : $this->never())
             ->method('flush');
 
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-        $flashBagMock->expects($this->once())
-            ->method('add')
-            ->with('success', 'La tâche a bien été supprimée.');
+        return $entityManagerMock;
+    }
 
+    /**
+     * This helper method mocks FlashBagInterface
+     * and checks that add() is correctly called or not called.
+     *
+     * @param bool   $callAdd
+     * @param string $type
+     * @param string $message
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|FlashBagInterface
+     */
+    private function getFlashBagMock(bool $callAdd, string $type, string $message)
+    {
+        $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $flashBagMock->expects($callAdd ? $this->once() : $this->never())
+            ->method('add')
+            ->with($type, $message);
+
+        return $flashBagMock;
+    }
+
+    /**
+     * This helper method mocks RouterInterface
+     * and checks that generate() is correctly called or not called.
+     *
+     * @param bool   $callGenerate
+     * @param string $route
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|RouterInterface
+     */
+    private function getRouterMock(bool $callGenerate, string $route)
+    {
         $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($this->once())
+        $routerMock->expects($callGenerate ? $this->once() : $this->never())
             ->method('generate')
-            ->with('task_list')
+            ->with($route)
             ->willReturn('/');
 
-        $twigMock = $this->createMock(\Twig_Environment::class);
-
-        $controller = new TaskController($twigMock, $entityManagerMock);
-
-        $this->assertInstanceOf(RedirectResponse::class, $controller->deleteTaskAction($task, $flashBagMock, $routerMock));
+        return $routerMock;
     }
 }
