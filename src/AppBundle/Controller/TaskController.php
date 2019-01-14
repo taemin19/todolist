@@ -80,7 +80,7 @@ class TaskController
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
-            $flashBag->add('success', 'La tâche a été bien été ajoutée.');
+            $flashBag->add('success', 'La tâche a bien été ajoutée.');
 
             return new RedirectResponse(
                 $router->generate('task_list')
@@ -109,7 +109,7 @@ class TaskController
      *
      * @return RedirectResponse|Response
      */
-    public function editAction(FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, Task $task, RouterInterface $router)
+    public function editAction(FormFactoryInterface $formFactory, Task $task, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
     {
         $form = $formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);

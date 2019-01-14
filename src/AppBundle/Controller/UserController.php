@@ -74,6 +74,7 @@ class UserController
     public function createAction(FormFactoryInterface $formFactory, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router)
     {
         $user = new User();
+
         $form = $formFactory->create(UserType::class, $user);
         $form->handleRequest($request);
 

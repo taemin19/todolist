@@ -46,6 +46,8 @@ class SecurityController
 
     /**
      * @Route("/login_check", name="login_check")
+     *
+     * @codeCoverageIgnore
      */
     public function loginCheck()
     {
@@ -54,6 +56,8 @@ class SecurityController
 
     /**
      * @Route("/logout", name="logout")
+     *
+     * @codeCoverageIgnore
      */
     public function logoutCheck()
     {
