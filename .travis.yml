@@ -34,3 +34,5 @@ script:
   - ./bin/console doctrine:schema:update --force --env=test
   # this checks that Unit tests are correctly executed
   - ./vendor/bin/simple-phpunit
+  # this checks that Functional tests are correctly executed
+  - ./vendor/bin/behat --format progress
