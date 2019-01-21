@@ -59,7 +59,7 @@ class FeatureContext extends MinkContext implements Context
     }
 
     /**
-     * @BeforeScenario
+     * @AfterScenario
      *
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
