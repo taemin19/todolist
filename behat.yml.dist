@@ -1,0 +1,18 @@
+default:
+    suites:
+        default:
+           contexts:
+               - FeatureContext:
+                   doctrine: '@doctrine'
+                   encoder: '@security.password_encoder'
+               - behatch:context:browser
+
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: "http://localhost/"
+            show_cmd: firefox %s
+            sessions:
+                default:
+                    symfony2: ~
+        Behatch\Extension: ~
