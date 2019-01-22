@@ -43,24 +43,4 @@ class SecurityController
             ])
         );
     }
-
-    /**
-     * @Route("/login_check", name="login_check")
-     *
-     * @codeCoverageIgnore
-     */
-    public function loginCheck()
-    {
-        // This code is never executed.
-    }
-
-    /**
-     * @Route("/logout", name="logout")
-     *
-     * @codeCoverageIgnore
-     */
-    public function logoutCheck()
-    {
-        // This code is never executed.
-    }
 }
