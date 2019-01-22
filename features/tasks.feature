@@ -11,7 +11,7 @@ Feature: Tasks
     And I fill in "task_content" with "Must defeat Loki"
     And I press "Ajouter"
     Then I should be on "/tasks"
-    And I should see "Superbe ! La tâche a bien été ajouté"
+    And I should see "Superbe ! La tâche a bien été ajoutée."
     And I should see 1 tasks
     And I should see "Thor"
     And I should see "Must defeat Loki"
@@ -39,7 +39,7 @@ Feature: Tasks
     And I fill in "task_content" with "<content>"
     And I press "Modifier"
     Then I should be on "/tasks"
-    And I should see "Superbe ! La tâche a bien été modifié"
+    And I should see "Superbe ! La tâche a bien été modifiée."
     And I should see "<title>"
     And I should see "<content>"
 
@@ -57,7 +57,7 @@ Feature: Tasks
     And I am on "/tasks"
     And I should see 2 tasks
     When I press the 2nd "Supprimer" button
-    Then I should see "Superbe ! La tâche a bien été supprimée"
+    Then I should see "Superbe ! La tâche a bien été supprimée."
     And I should see 1 tasks
     And I should not see "Iron Man"
     But I should see "Thor"
@@ -70,11 +70,24 @@ Feature: Tasks
     And I am on "/tasks"
     And I should see 1 tasks as not done
     When I press "Marquer comme faite"
-    Then I should see "Superbe ! La tâche Thor a bien été marquée comme faite"
+    Then I should see "Superbe ! La tâche Thor a bien été marquée comme faite."
     And I should see 1 tasks as done
     When I press "Marquer non terminée"
-    Then I should see "Superbe ! La tâche Thor a bien été marquée comme faite"
+    Then I should see "Superbe ! La tâche Thor a bien été marquée comme non terminée."
     And I should see 1 tasks as not done
+
+  @loginAsUserNick
+  Scenario Outline: Throw some error messages when the task creation failed
+    And I am on "/tasks/create"
+    When I fill in "task_title" with "<title>"
+    And I fill in "task_content" with "<content>"
+    And I press "Ajouter"
+    Then I should see "<error message>"
+
+    Examples:
+      | error message                 | title     | content            |
+      | Vous devez saisir un titre.   |           | Must defeat Thanos |
+      | Vous devez saisir du contenu. | Nick Fury |                    |
 
   @loginAsUserNick
   Scenario Outline: Throw some error messages when the task modification failed
@@ -88,6 +101,6 @@ Feature: Tasks
     Then I should see "<error message>"
 
     Examples:
-      | error message                | title     | content            |
-      | Vous devez saisir un titre   |           | Must defeat Thanos |
-      | Vous devez saisir du contenu | Nick Fury |                    |
+      | error message                 | title     | content            |
+      | Vous devez saisir un titre.   |           | Must defeat Thanos |
+      | Vous devez saisir du contenu. | Nick Fury |                    |
