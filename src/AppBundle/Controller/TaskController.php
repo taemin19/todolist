@@ -146,7 +146,11 @@ class TaskController
         $task->toggle(!$task->isDone());
         $this->entityManager->flush();
 
-        $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isDone()) {
+            $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        } else {
+            $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+        }
 
         return new RedirectResponse(
             $router->generate('task_list')

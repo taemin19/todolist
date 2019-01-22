@@ -62,12 +62,15 @@ Feature: Users
     Then I should see "<error message>"
 
     Examples:
-      | error message                               | username | password_first | password_second | email            |
-      | Vous devez saisir un nom d'utilisateur.     |          | avengers       | avengers        | the@avengers.com |
-      | Vous devez saisir une adresse email.        | avengers | avengers       | avengers        |                  |
-      |                                             | nick     | avengers       | avengers        | the@avengers.com |
-      | Les deux mots de passe doivent correspondre.| avengers | avengers       | shield          | the@avengers.com |
-      | This value is already used.                 | avengers | avengers       | avengers        | nick@fury.com    |
+      | error message                                | username | password_first | password_second | email            |
+      | Vous devez saisir un nom d'utilisateur.      |          | avengers       | avengers        | the@avengers.com |
+      | Ce nom d'utilisateur est déjà utilisé.       | nick     | avengers       | avengers        | the@avengers.com |
+      | Vous devez saisir une adresse email.         | avengers | avengers       | avengers        |                  |
+      | Le format de l'adresse n'est pas correcte.   | avengers | avengers       | avengers        | the@avengers     |
+      | Cet e-mail est déjà utilisé.                 | avengers | avengers       | avengers        | nick@fury.com    |
+      | Vous devez saisir un mot de passe.           | avengers |                |                 | the@avengers.com |
+      | Les deux mots de passe doivent correspondre. | avengers | avengers       | shield          | the@avengers.com |
+
 
   Scenario Outline: Throw some error messages when the user modification failed
     Given the following users exist:
@@ -83,9 +86,10 @@ Feature: Users
     Then I should see "<error message>"
 
     Examples:
-      | error message                               | username | password_first | password_second | email          |
-      | Vous devez saisir un nom d'utilisateur.     |          | shield         | shield          | nick@fury.com  |
-      | Vous devez saisir une adresse email.        | nick     | shield         | shield          |                |
-      |                                             | tony     | shield         | shield          | nick@fury.com  |
-      | Les deux mots de passe doivent correspondre.| nick     | avengers       | shield          | nick@fury.com  |
-      | This value is already used.                 | nick     | shield         | shield          | tony@stark.com |
+      | error message                                | username | password_first | password_second | email          |
+      | Vous devez saisir un nom d'utilisateur.      |          | shield         | shield          | nick@fury.com  |
+      | Vous devez saisir une adresse email.         | nick     | shield         | shield          |                |
+      | Le format de l'adresse n'est pas correcte.   | nick     | shield         | shield          | nick@fury      |
+      | Cet e-mail est déjà utilisé.                 | nick     | shield         | shield          | tony@stark.com |
+      | Vous devez saisir un mot de passe.           | nick     |                |                 | nick@fury.com  |
+      | Les deux mots de passe doivent correspondre. | nick     | avengers       | shield          | nick@fury.com  |

@@ -10,7 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table("user")
  * @ORM\Entity
- * @UniqueEntity("email")
+ * @UniqueEntity("username", message="Ce nom d'utilisateur est déjà utilisé.")
+ * @UniqueEntity("email", message="Cet e-mail est déjà utilisé.")
  */
 class User implements UserInterface
 {
@@ -29,6 +30,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank(message="Vous devez saisir un mot de passe.")
      */
     private $password;
 
