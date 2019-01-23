@@ -10,7 +10,7 @@
             <div class="thumbnail">
                 <div class="caption">
                     <h4 class="pull-right">
-                        <span class="glyphicon glyphicon-remove"></span>
+                        <span class="glyphicon glyphicon-ok"></span>
                     </h4>
                     <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
@@ -18,7 +18,7 @@
                 <div>
                     <form action="{{ path('task_toggle', {'id' : task.id }) }}">
                         <button class="btn btn-success btn-sm pull-right">
-                            Marquer comme faite
+                            Marquer comme non terminée
                         </button>
                     </form>
                     <form action="{{ path('task_delete', {'id' : task.id }) }}">
@@ -29,7 +29,7 @@
         </div>
         {% else %}
             <div class="alert alert-warning" role="alert">
-                <p>Il n'y a pas de tâche à faire.</p>
+                <p>Il n'y a pas encore de tâche terminée.</p>
             </div>
         {% endfor %}
     </div>
