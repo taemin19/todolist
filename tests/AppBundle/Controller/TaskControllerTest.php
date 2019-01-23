@@ -31,7 +31,7 @@ class TaskControllerTest extends TestCase
     {
         $objectRepository = $this->createMock(ObjectRepository::class);
         $objectRepository->expects($this->once())
-            ->method('findAll');
+            ->method('findBy');
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->once())
@@ -46,6 +46,36 @@ class TaskControllerTest extends TestCase
         $controller = new TaskController($twig, $entityManager);
 
         $this->assertInstanceOf(Response::class, $controller->listAction());
+    }
+
+    /**
+     * This test checks that the method listDoneAction() is correctly returned
+     * and checks that the methods are correctly called.
+     *
+     * @throws \ReflectionException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function testListDone()
+    {
+        $objectRepository = $this->createMock(ObjectRepository::class);
+        $objectRepository->expects($this->once())
+            ->method('findBy');
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->once())
+            ->method('getRepository')
+            ->with('AppBundle:Task')
+            ->willReturn($objectRepository);
+
+        $twig = $this->getTwigMock(true, 'task/list_done.html.twig', [
+            'tasks' => null,
+        ]);
+
+        $controller = new TaskController($twig, $entityManager);
+
+        $this->assertInstanceOf(Response::class, $controller->listDoneAction());
     }
 
     /**
@@ -140,23 +170,41 @@ class TaskControllerTest extends TestCase
      * This test checks that the method toggleAction() is correctly returned
      * and checks that the methods are correctly called.
      *
+     * @param bool   $taskIsDone
+     * @param string $message
+     * @param string $route
+     *
      * @throws \ReflectionException
+     * @dataProvider provideTaskIsDone
      */
-    public function testToggleTask()
+    public function testToggleTask(bool $taskIsDone, string $message, string $route)
     {
-        $task = new Task();
+        $task = $this->createMock(Task::class);
+
+        $task->method('isDone')->willReturn($taskIsDone);
 
         $entityManager = $this->getEntityManagerMock(false, false, true, $task);
 
-        $flashBag = $this->getFlashBagMock(true, 'success', sprintf('La tâche %s a bien été marquée comme faite.', ''));
+        $flashBag = $this->getFlashBagMock(true, 'success', sprintf($message, ''));
 
-        $router = $this->getRouterMock(true, 'task_list');
+        $router = $this->getRouterMock(true, $route);
 
         $twig = $this->getTwigMock(false);
 
         $controller = new TaskController($twig, $entityManager);
 
         $this->assertInstanceOf(RedirectResponse::class, $controller->toggleTaskAction($task, $flashBag, $router));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideTaskIsDone()
+    {
+        return [
+            [true, 'La tâche %s a bien été marquée comme faite.', 'task_list'],
+            [false, 'La tâche %s a bien été marquée comme non terminée.', 'task_done'],
+        ];
     }
 
     /**
