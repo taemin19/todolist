@@ -50,7 +50,25 @@ class TaskController
     {
         return new Response(
             $this->twig->render('task/list.html.twig', [
-                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findAll(),
+                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findBy(['isDone' => false]),
+            ])
+        );
+    }
+
+    /**
+     * @Route("/tasks/done", name="task_done")
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return Response
+     */
+    public function listDoneAction()
+    {
+        return new Response(
+            $this->twig->render('task/list_done.html.twig', [
+                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findBy(['isDone' => true]),
             ])
         );
     }
@@ -148,13 +166,17 @@ class TaskController
 
         if ($task->isDone()) {
             $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-        } else {
-            $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+
+            return new RedirectResponse(
+                $router->generate('task_list')
+            );
         }
 
+        $flashBag->add('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+
         return new RedirectResponse(
-            $router->generate('task_list')
-        );
+                $router->generate('task_done')
+            );
     }
 
     /**

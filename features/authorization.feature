@@ -23,8 +23,8 @@ Feature: Authorization
     Examples:
       | url           |
       | /             |
-      | /login        |
       | /tasks        |
+      | /tasks/done   |
       | /tasks/create |
       | /tasks/1/edit |
 
@@ -36,5 +36,6 @@ Feature: Authorization
       | url           |
       | /             |
       | /tasks        |
+      | /tasks/done   |
       | /tasks/create |
       | /tasks/1/edit |
