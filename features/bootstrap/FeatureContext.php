@@ -123,6 +123,7 @@ class FeatureContext extends MinkContext implements Context
             $task = new Task();
             $task->setTitle($taskHash['title']);
             $task->setContent($taskHash['content']);
+            $task->toggle($taskHash['isDone']);
             $em->persist($task);
         }
 
