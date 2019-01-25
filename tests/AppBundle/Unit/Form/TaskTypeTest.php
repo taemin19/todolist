@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Form;
+namespace Tests\AppBundle\Unit\Form;
 
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;

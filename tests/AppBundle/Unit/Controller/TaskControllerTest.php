@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\AppBundle\Unit\Controller;
 
 use AppBundle\Controller\TaskController;
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use AppBundle\Form\TaskType;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TaskControllerTest extends TestCase
 {
@@ -95,6 +98,16 @@ class TaskControllerTest extends TestCase
     {
         $task = new Task();
 
+        $token = $this->createMock(TokenInterface::class);
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willReturn(new User());
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->expects($this->once())
+            ->method('getToken')
+            ->willReturn($token);
+
         $request = $this->createMock(Request::class);
 
         $form = $this->getFormMock($formIsSubmitted, $request);
@@ -113,7 +126,7 @@ class TaskControllerTest extends TestCase
 
         $controller = new TaskController($twig, $entityManager);
 
-        $this->assertInstanceOf($className, $controller->createAction($formFactory, $request, $flashBag, $router));
+        $this->assertInstanceOf($className, $controller->createAction($tokenStorage, $formFactory, $request, $flashBag, $router));
     }
 
     /**

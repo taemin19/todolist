@@ -46,7 +46,7 @@ class AppFixtures extends Fixture
      */
     public function loadUsers(ObjectManager $manager)
     {
-        // create 2 users
+        // create 2 users: User1 with password 'user1' and User2 with password 'user2'
         for ($i = 1; $i <= 2; ++$i) {
             $user = new User();
             $user->setUsername('User'.$i);
@@ -54,6 +54,16 @@ class AppFixtures extends Fixture
             $user->setEmail($this->faker->unique()->email);
 
             $manager->persist($user);
+
+            // create 3 tasks for User1 and 3 tasks for User2
+            for ($j = 1; $j <= 3; ++$j) {
+                $task = new Task();
+                $task->setTitle('User'.$i.'Task'.$j);
+                $task->setContent($this->faker->text(100));
+                $task->setUser($user);
+
+                $manager->persist($task);
+            }
         }
 
         $manager->flush();
@@ -64,7 +74,7 @@ class AppFixtures extends Fixture
      */
     public function loadTasks(ObjectManager $manager)
     {
-        // create 5 tasks
+        // create 5 tasks not attached to a user
         for ($i = 1; $i <= 5; ++$i) {
             $task = new Task();
             $task->setTitle('Task'.$i);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\AppBundle\Unit\Controller;
 
 use AppBundle\Controller\SecurityController;
 use PHPUnit\Framework\TestCase;

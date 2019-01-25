@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\AppBundle\Unit\Entity;
 
+use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
 
@@ -29,5 +30,9 @@ class UserTest extends TestCase
         $this->assertSame('user@email.com', $user->getEmail());
 
         $this->assertSame(['ROLE_USER'], $user->getRoles());
+
+        $user->addTask(new Task());
+        $this->assertNotEmpty($user->getTasks());
+        $this->assertContainsOnlyInstancesOf(Task::class, $user->getTasks());
     }
 }

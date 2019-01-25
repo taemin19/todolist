@@ -30,7 +30,7 @@ db-v: ## Validate mapping/database
 	php bin/console doctrine:schema:validate
 
 db-f: src/AppBundle/DataFixtures ## Load a "fake" set data into the database
-	php bin/console doctrine:fixtures:load --purge-with-truncate
+	php bin/console doctrine:fixtures:load
 
 ## Symfony commands
 cache: var/cache ## Clear the cache in the current environment

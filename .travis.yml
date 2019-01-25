@@ -33,6 +33,8 @@ script:
   - ./bin/console doctrine:database:create --env=test
   - ./bin/console doctrine:schema:update --force --env=test
   # this checks that Unit tests are correctly executed
-  - ./vendor/bin/simple-phpunit
+  - ./vendor/bin/simple-phpunit tests/AppBundle/Unit
+  # this checks that Integration tests are correctly executed
+  - ./vendor/bin/simple-phpunit tests/AppBundle/Integration
   # this checks that Functional tests are correctly executed
   - ./vendor/bin/behat --format progress
