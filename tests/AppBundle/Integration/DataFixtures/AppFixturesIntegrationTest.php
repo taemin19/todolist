@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\DataFixtures;
+namespace Tests\AppBundle\Integration\DataFixtures;
 
 use AppBundle\DataFixtures\AppFixtures;
 use AppBundle\Entity\Task;

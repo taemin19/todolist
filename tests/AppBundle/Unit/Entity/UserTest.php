@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\AppBundle\Unit\Entity;
 
 use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
