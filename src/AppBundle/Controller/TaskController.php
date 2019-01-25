@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TaskController
 {
@@ -76,10 +77,11 @@ class TaskController
     /**
      * @Route("/tasks/create", name="task_create")
      *
-     * @param FormFactoryInterface $formFactory
-     * @param Request              $request
-     * @param FlashBagInterface    $flashBag
-     * @param RouterInterface      $router
+     * @param TokenStorageInterface $tokenStorage
+     * @param FormFactoryInterface  $formFactory
+     * @param Request               $request
+     * @param FlashBagInterface     $flashBag
+     * @param RouterInterface       $router
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -87,9 +89,12 @@ class TaskController
      *
      * @return RedirectResponse|Response
      */
-    public function createAction(FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
+    public function createAction(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
     {
+        $user = $tokenStorage->getToken()->getUser();
+
         $task = new Task();
+        $task->setUser($user);
 
         $form = $formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);
