@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Unit\Entity;
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase
@@ -31,5 +32,8 @@ class TaskTest extends TestCase
 
         $task->toggle(true);
         $this->assertTrue($task->isDone());
+
+        $task->setUser(new User());
+        $this->assertInstanceOf(User::class, $task->getUser());
     }
 }
