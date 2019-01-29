@@ -68,7 +68,10 @@ test-f: features ## Run functional tests, [FEATURE=example.feature] to test a sp
 	vendor/bin/behat features/$(FEATURE)
 
 test-u: tests ## Run unit tests, [TEST=Dir[/Test.php]] to test a directory or a specific test file
-	./vendor/bin/simple-phpunit tests/AppBundle/$(TEST)
+	./vendor/bin/simple-phpunit tests/AppBundle/Unit/$(TEST)
+
+test-i: tests ## Run integration tests, [TEST=Dir[/Test.php]] to test a directory or a specific test file
+	./vendor/bin/simple-phpunit tests/AppBundle/Integration/$(TEST)
 
 test-c: tests ## Generate code coverage report in HTML format
 	./vendor/bin/simple-phpunit --coverage-html web/test-coverage
