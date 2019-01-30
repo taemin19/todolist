@@ -16,7 +16,20 @@ Feature: Authorization
       | /users/1/edit |
 
   @loginAsUserNick
-  Scenario Outline: Access protected pages
+  Scenario Outline: Access protected pages for a user
+    When I go to "<url>"
+    Then I should be on "<url>"
+
+    Examples:
+      | url           |
+      | /             |
+      | /tasks        |
+      | /tasks/done   |
+      | /tasks/create |
+      | /tasks/1/edit |
+
+  @loginAsAdminShield
+  Scenario Outline: Access protected pages for an admin
     When I go to "<url>"
     Then I should be on "<url>"
 

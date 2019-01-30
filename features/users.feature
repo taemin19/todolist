@@ -3,30 +3,39 @@ Feature: Users
   As a user
   I need to be able to create/list/edit them
 
-  Scenario: Create a user
+  Scenario Outline: Create a user
     Given I am on "/users/create"
     When I fill in "user_username" with "nick"
     And I fill in "user_password_first" with "shield"
     And I fill in "user_password_second" with "shield"
     And I fill in "user_email" with "nick@fury.com"
+    And I select "<role>" from "user_roles_0"
     And I press "Ajouter"
     Then I should be on "/users"
     And I should see "Superbe ! L'utilisateur a bien été ajouté"
     And I should see 1 users
     And I should see "nick"
     And I should see "nick@fury.com"
+    And I should see "<role>"
+
+    Examples:
+      | role       |
+      | ROLE_USER  |
+      | ROLE_ADMIN |
 
   Scenario: List the users
     Given the following users exist:
       | username | password | email          |
       | nick     | shield   | nick@fury.com  |
-      | tony     | ironman  | tony@stark.com |
+    Given the following admins exist:
+      | username | password | email          |
+      | shield   | avengers | the@avengers.com  |
     And I am on "/users"
     Then I should see 2 users
     And I should see "nick"
     And I should see "nick@fury.com"
-    And I should see "tony"
-    And I should see "tony@stark.com"
+    And I should see "shield"
+    And I should see "the@avengers.com"
 
   Scenario Outline: Edit a user
     Given the following users exist:
@@ -37,17 +46,19 @@ Feature: Users
     And I fill in "user_password_first" with "<password_first>"
     And I fill in "user_password_second" with "<password_second>"
     And I fill in "user_email" with "<email>"
+    And I select "<role>" from "user_roles_0"
     And I press "Modifier"
     Then I should be on "/users"
     And I should see "Superbe ! L'utilisateur a bien été modifié"
     And I should see "<username>"
     And I should see "<email>"
+    And I should see "<role>"
 
     Examples:
-      | username | password_first | password_second | email            |
-      | avengers | shield         | shield          | nick@fury.com    |
-      | nick     | avengers       | avengers        | nick@fury.com    |
-      | nick     | shield         | shield          | the@avengers.com |
+      | username | password_first | password_second | email            | role       |
+      | avengers | shield         | shield          | nick@fury.com    | ROLE_ADMIN |
+      | nick     | avengers       | avengers        | nick@fury.com    | ROLE_USER  |
+      | nick     | shield         | shield          | the@avengers.com | ROLE_USER  |
 
   Scenario Outline: Throw some error messages when the user creation failed
     Given the following users exist:

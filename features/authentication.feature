@@ -3,18 +3,33 @@ Feature: Authentication
   As a user
   I need to be able to login/logout
 
-  Scenario: Login
+  Scenario Outline: Login
     Given the following users exist:
       | username | password | email          |
       | nick     | shield   | nick@fury.com  |
+    Given the following admins exist:
+      | username | password | email          |
+      | shield   | avengers | the@avengers.com  |
     And I am on "/login"
-    When I fill in "username" with "nick"
-    And I fill in "password" with "shield"
+    When I fill in "username" with "<username>"
+    And I fill in "password" with "<password>"
     And I press "Se connecter"
     Then I should be on "/"
     And I should see "Se déconnecter"
 
+    Examples:
+      | username | password |
+      | nick     | shield   |
+      | shield   | avengers |
+
   @loginAsUserNick
+  Scenario: Logout
+    Given I am on "/"
+    And I should see "Se déconnecter"
+    When I click "Se déconnecter"
+    Then I should be on "/login"
+
+  @loginAsAdminShield
   Scenario: Logout
     Given I am on "/"
     And I should see "Se déconnecter"
