@@ -25,11 +25,6 @@ class FeatureContext extends MinkContext implements Context
     private $classes;
 
     /**
-     * @var
-     */
-    private $currentUser;
-
-    /**
      * @var ManagerRegistry
      */
     private $doctrine;
@@ -80,8 +75,6 @@ class FeatureContext extends MinkContext implements Context
         $user->setPassword($this->encoder->encodePassword($user, 'shield'));
         $user->setEmail('nick@fury.com');
 
-        $this->currentUser = $user;
-
         $em = $this->doctrine->getManager();
         $em->persist($user);
         $em->flush();
@@ -89,6 +82,27 @@ class FeatureContext extends MinkContext implements Context
         $this->visitPath('/login');
         $this->fillField('username', 'nick');
         $this->fillField('password', 'shield');
+        $this->pressButton('Se connecter');
+    }
+
+    /**
+     * @BeforeScenario @loginAsAdminShield
+     */
+    public function iAmLoggedInAsAdmin()
+    {
+        $user = new User();
+        $user->setUsername('shield');
+        $user->setPassword($this->encoder->encodePassword($user, 'avengers'));
+        $user->setEmail('the@avengers.com');
+        $user->setRoles(['ROLE_ADMIN']);
+
+        $em = $this->doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        $this->visitPath('/login');
+        $this->fillField('username', 'shield');
+        $this->fillField('password', 'avengers');
         $this->pressButton('Se connecter');
     }
 
@@ -105,6 +119,26 @@ class FeatureContext extends MinkContext implements Context
             $user->setUsername($userHash['username']);
             $user->setPassword($this->encoder->encodePassword($user, $userHash['password']));
             $user->setEmail($userHash['email']);
+            $em->persist($user);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @param TableNode $table
+     * @Given the following admins exist:
+     */
+    public function theFollowingAdminsExist(TableNode $table)
+    {
+        $em = $this->doctrine->getManager();
+
+        foreach ($table->getHash() as $userHash) {
+            $user = new User();
+            $user->setUsername($userHash['username']);
+            $user->setPassword($this->encoder->encodePassword($user, $userHash['password']));
+            $user->setEmail($userHash['email']);
+            $user->setRoles(['ROLE_ADMIN']);
             $em->persist($user);
         }
 
