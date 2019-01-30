@@ -12,6 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Task
 {
     /**
+     * @var int
+     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -19,6 +21,8 @@ class Task
     private $id;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -30,17 +34,23 @@ class Task
     private $title;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Vous devez saisir du contenu.")
      */
     private $content;
 
     /**
+     * @var bool
+     *
      * @ORM\Column(type="boolean")
      */
     private $isDone;
 
     /**
+     * @var User
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="tasks")
      */
     private $user;
@@ -51,57 +61,57 @@ class Task
         $this->isDone = false;
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }
 
-    public function isDone()
+    public function isDone(): bool
     {
         return $this->isDone;
     }
 
-    public function toggle($flag)
+    public function toggle($flag): void
     {
         $this->isDone = $flag;
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

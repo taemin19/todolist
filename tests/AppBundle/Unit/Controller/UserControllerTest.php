@@ -228,7 +228,8 @@ class UserControllerTest extends TestCase
         $userPasswordEncoder = $this->createMock(UserPasswordEncoderInterface::class);
         $userPasswordEncoder->expects($callEncodePassword ? $this->once() : $this->never())
             ->method('encodePassword')
-            ->with($user, $user->getPassword());
+            ->with($user, $user->getPassword())
+            ->willReturn('');
 
         return $userPasswordEncoder;
     }
