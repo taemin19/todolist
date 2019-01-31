@@ -1,10 +1,11 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserController
+/**
+ * Controller used to manage the users in the backend.
+ *
+ * @Route("/admin")
+ * @IsGranted("ROLE_ADMIN")
+ */
+class UserAdminController
 {
     /**
      * @var \Twig_Environment
@@ -27,7 +34,7 @@ class UserController
     private $entityManager;
 
     /**
-     * UserController constructor.
+     * UserAdminController constructor.
      *
      * @param \Twig_Environment      $twig
      * @param EntityManagerInterface $entityManager
@@ -39,7 +46,9 @@ class UserController
     }
 
     /**
-     * @Route("/users", name="user_list")
+     * Lists all User entities.
+     *
+     * @Route("/users", methods={"GET"}, name="admin_user_list")
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -47,17 +56,19 @@ class UserController
      *
      * @return Response
      */
-    public function listAction()
+    public function listAction(): Response
     {
         return new Response(
-            $this->twig->render('user/list.html.twig', [
+            $this->twig->render('admin/user/list.html.twig', [
                 'users' => $this->entityManager->getRepository('AppBundle:User')->findAll(),
             ])
         );
     }
 
     /**
-     * @Route("/users/create", name="user_create")
+     * Creates a new User entity.
+     *
+     * @Route("/users/create", methods={"GET", "POST"}, name="admin_user_create")
      *
      * @param FormFactoryInterface         $formFactory
      * @param Request                      $request
@@ -69,9 +80,9 @@ class UserController
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      *
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function createAction(FormFactoryInterface $formFactory, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router)
+    public function createAction(FormFactoryInterface $formFactory, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $user = new User();
 
@@ -88,19 +99,21 @@ class UserController
             $flashBag->add('success', "L'utilisateur a bien été ajouté.");
 
             return new RedirectResponse(
-                $router->generate('user_list')
+                $router->generate('admin_user_list')
             );
         }
 
         return new Response(
-            $this->twig->render('user/create.html.twig', [
+            $this->twig->render('admin/user/create.html.twig', [
                 'form' => $form->createView(),
             ])
         );
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * Displays a form to edit an existing User entity.
+     *
+     * @Route("/users/{id}/edit", methods={"GET", "POST"}, name="admin_user_edit")
      *
      * @param FormFactoryInterface         $formFactory
      * @param User                         $user
@@ -113,9 +126,9 @@ class UserController
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      *
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function editAction(FormFactoryInterface $formFactory, User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router)
+    public function editAction(FormFactoryInterface $formFactory, User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $form = $formFactory->create(UserType::class, $user);
         $form->handleRequest($request);
@@ -129,12 +142,12 @@ class UserController
             $flashBag->add('success', "L'utilisateur a bien été modifié");
 
             return new RedirectResponse(
-                $router->generate('user_list')
+                $router->generate('admin_user_list')
             );
         }
 
         return new Response(
-            $this->twig->render('user/edit.html.twig', [
+            $this->twig->render('admin/user/edit.html.twig', [
                 'form' => $form->createView(), 'user' => $user,
             ])
         );
