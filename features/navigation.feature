@@ -9,29 +9,26 @@ Feature: Navigation
     When I click "To Do List app"
     Then I should be on "/"
 
-  Scenario: Login link
-    Given I am on "/users/create"
-    When I click "Se connecter"
-    Then I should be on "/login"
-
   @loginAsUserNick
   Scenario: Logout link
     Given I am on "/"
     When I click "Se déconnecter"
     Then I should be on "/login"
 
+  @loginAsAdminShield
   Scenario: User create link
-    Given I am on "/login"
+    Given I am on "/"
     When I click "Créer un utilisateur"
-    Then I should be on "/users/create"
+    Then I should be on "/admin/users/create"
 
+  @loginAsAdminShield
   Scenario: User edit link
     Given the following users exist:
       | username | password | email          |
       | nick     | shield   | nick@fury.com  |
-    Given I am on "/users"
+    Given I am on "/admin/users"
     When I click "Edit"
-    Then I should be on "/users/1/edit"
+    Then I should be on "admin/users/1/edit"
 
   @loginAsUserNick
   Scenario Outline: Task create link
