@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Unit\Controller;
 
-use AppBundle\Controller\UserController;
+use AppBundle\Controller\Admin\UserAdminController;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserControllerTest extends TestCase
+class UserAdminControllerTest extends TestCase
 {
     /**
      * This test checks that the method listAction() is correctly returned
@@ -40,11 +40,11 @@ class UserControllerTest extends TestCase
             ->with('AppBundle:User')
             ->willReturn($objectRepository);
 
-        $twig = $this->getTwigMock(true, 'user/list.html.twig', [
+        $twig = $this->getTwigMock(true, 'admin/user/list.html.twig', [
             'users' => null,
         ]);
 
-        $controller = new UserController($twig, $entityManager);
+        $controller = new UserAdminController($twig, $entityManager);
 
         $this->assertInstanceOf(Response::class, $controller->listAction());
     }
@@ -78,13 +78,13 @@ class UserControllerTest extends TestCase
 
         $flashBag = $this->getFlashBagMock($formIsSubmitted, 'success', 'L\'utilisateur a bien été ajouté.');
 
-        $router = $this->getRouterMock($formIsSubmitted, 'user_list');
+        $router = $this->getRouterMock($formIsSubmitted, 'admin_user_list');
 
-        $twig = $this->getTwigMock(!$formIsSubmitted, 'user/create.html.twig', [
+        $twig = $this->getTwigMock(!$formIsSubmitted, 'admin/user/create.html.twig', [
             'form' => null,
         ]);
 
-        $controller = new UserController($twig, $entityManager);
+        $controller = new UserAdminController($twig, $entityManager);
 
         $this->assertInstanceOf($className, $controller->createAction($formFactory, $request, $passwordEncoder, $flashBag, $router));
     }
@@ -118,14 +118,14 @@ class UserControllerTest extends TestCase
 
         $flashBag = $this->getFlashBagMock($formIsSubmitted, 'success', 'L\'utilisateur a bien été modifié');
 
-        $router = $this->getRouterMock($formIsSubmitted, 'user_list');
+        $router = $this->getRouterMock($formIsSubmitted, 'admin_user_list');
 
-        $twig = $this->getTwigMock(!$formIsSubmitted, 'user/edit.html.twig', [
+        $twig = $this->getTwigMock(!$formIsSubmitted, 'admin/user/edit.html.twig', [
             'form' => null,
             'user' => $user,
         ]);
 
-        $controller = new UserController($twig, $entityManager);
+        $controller = new UserAdminController($twig, $entityManager);
 
         $this->assertInstanceOf($className, $controller->editAction($formFactory, $user, $request, $passwordEncoder, $flashBag, $router));
     }
