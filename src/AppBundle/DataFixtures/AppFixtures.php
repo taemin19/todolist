@@ -38,6 +38,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $this->loadUsers($manager);
+        $this->loadAdmins($manager);
         $this->loadTasks($manager);
     }
 
@@ -61,6 +62,35 @@ class AppFixtures extends Fixture
                 $task->setTitle('User'.$i.'Task'.$j);
                 $task->setContent($this->faker->text(100));
                 $task->setUser($user);
+
+                $manager->persist($task);
+            }
+        }
+
+        $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     */
+    public function loadAdmins(ObjectManager $manager)
+    {
+        // create 2 admins: Admin1 with password 'admin1' and Admin2 with password 'admin2'
+        for ($i = 1; $i <= 2; ++$i) {
+            $admin = new User();
+            $admin->setUsername('Admin'.$i);
+            $admin->setPassword($this->encoder->encodePassword($admin, 'admin'.$i));
+            $admin->setEmail($this->faker->unique()->email);
+            $admin->setRoles(['ROLE_ADMIN']);
+
+            $manager->persist($admin);
+
+            // create 3 tasks for Admin1 and 3 tasks for Admin2
+            for ($j = 1; $j <= 3; ++$j) {
+                $task = new Task();
+                $task->setTitle('Admin'.$i.'Task'.$j);
+                $task->setContent($this->faker->text(100));
+                $task->setUser($admin);
 
                 $manager->persist($task);
             }

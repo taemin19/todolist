@@ -1,19 +1,19 @@
 Feature: Users
   In order to manage the users on the application
-  As a user
+  As a admin
   I need to be able to create/list/edit them
 
+  @loginAsAdminShield
   Scenario Outline: Create a user
-    Given I am on "/users/create"
+    Given I am on "admin/users/create"
     When I fill in "user_username" with "nick"
     And I fill in "user_password_first" with "shield"
     And I fill in "user_password_second" with "shield"
     And I fill in "user_email" with "nick@fury.com"
     And I select "<role>" from "user_roles_0"
     And I press "Ajouter"
-    Then I should be on "/users"
+    Then I should be on "/admin/users"
     And I should see "Superbe ! L'utilisateur a bien été ajouté"
-    And I should see 1 users
     And I should see "nick"
     And I should see "nick@fury.com"
     And I should see "<role>"
@@ -23,32 +23,31 @@ Feature: Users
       | ROLE_USER  |
       | ROLE_ADMIN |
 
+  @loginAsAdminShield
   Scenario: List the users
     Given the following users exist:
       | username | password | email          |
       | nick     | shield   | nick@fury.com  |
-    Given the following admins exist:
-      | username | password | email          |
-      | shield   | avengers | the@avengers.com  |
-    And I am on "/users"
+    And I am on "/admin/users"
     Then I should see 2 users
     And I should see "nick"
     And I should see "nick@fury.com"
     And I should see "shield"
     And I should see "the@avengers.com"
 
+  @loginAsAdminShield
   Scenario Outline: Edit a user
     Given the following users exist:
       | username | password | email         |
       | nick     | shield   | nick@fury.com |
-    And I am on "/users/1/edit"
+    And I am on "/admin/users/2/edit"
     When I fill in "user_username" with "<username>"
     And I fill in "user_password_first" with "<password_first>"
     And I fill in "user_password_second" with "<password_second>"
     And I fill in "user_email" with "<email>"
     And I select "<role>" from "user_roles_0"
     And I press "Modifier"
-    Then I should be on "/users"
+    Then I should be on "/admin/users"
     And I should see "Superbe ! L'utilisateur a bien été modifié"
     And I should see "<username>"
     And I should see "<email>"
@@ -56,15 +55,17 @@ Feature: Users
 
     Examples:
       | username | password_first | password_second | email            | role       |
-      | avengers | shield         | shield          | nick@fury.com    | ROLE_ADMIN |
-      | nick     | avengers       | avengers        | nick@fury.com    | ROLE_USER  |
-      | nick     | shield         | shield          | the@avengers.com | ROLE_USER  |
+      | tony     | shield         | shield          | nick@fury.com    | ROLE_USER  |
+      | tony     | ironman        | ironman         | nick@fury.com    | ROLE_USER  |
+      | tony     | ironman        | ironman         | tony@stark.com   | ROLE_USER  |
+      | tony     | ironman        | ironman         | tony@stark.com   | ROLE_ADMIN |
 
+  @loginAsAdminShield
   Scenario Outline: Throw some error messages when the user creation failed
     Given the following users exist:
       | username | password | email         |
       | nick     | shield   | nick@fury.com |
-    And I am on "/users/create"
+    And I am on "/admin/users/create"
     When I fill in "user_username" with "<username>"
     And I fill in "user_password_first" with "<password_first>"
     And I fill in "user_password_second" with "<password_second>"
@@ -82,13 +83,13 @@ Feature: Users
       | Vous devez saisir un mot de passe.           | avengers |                |                 | the@avengers.com |
       | Les deux mots de passe doivent correspondre. | avengers | avengers       | shield          | the@avengers.com |
 
-
+  @loginAsAdminShield
   Scenario Outline: Throw some error messages when the user modification failed
     Given the following users exist:
       | username | password | email          |
       | nick     | shield   | nick@fury.com  |
       | tony     | ironman  | tony@stark.com |
-    And I am on "/users/1/edit"
+    And I am on "/admin/users/1/edit"
     When I fill in "user_username" with "<username>"
     And I fill in "user_password_first" with "<password_first>"
     And I fill in "user_password_second" with "<password_second>"
