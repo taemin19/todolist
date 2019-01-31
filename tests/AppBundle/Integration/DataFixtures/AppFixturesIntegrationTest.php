@@ -31,8 +31,8 @@ class AppFixturesIntegrationTest extends KernelTestCase
         $tasks = $container->get('doctrine')
             ->getRepository(Task::class)->findAll();
 
-        $this->assertSame(2, \count($users));
-        $this->assertSame(11, \count($tasks));
+        $this->assertSame(4, \count($users));
+        $this->assertSame(17, \count($tasks));
     }
 
     /**
@@ -87,6 +87,44 @@ class AppFixturesIntegrationTest extends KernelTestCase
         $this->assertSame(2, \count($users));
         $this->assertSame(3, \count($user1Tasks));
         $this->assertSame(3, \count($user2Tasks));
+    }
+
+    /**
+     * This test checks that admin fixtures
+     * are correctly created and saved in the database.
+     */
+    public function testLoadAdmins()
+    {
+        $this->executeLoad('Admins');
+
+        $container = self::$kernel->getContainer();
+
+        $admins = $container->get('doctrine')
+            ->getRepository(User::class)->findAll();
+
+        $admin1 = $container->get('doctrine')
+            ->getRepository(User::class)->findOneBy([
+                'username' => 'Admin1',
+            ]);
+
+        $admin1Tasks = $container->get('doctrine')
+            ->getRepository(Task::class)->findBy([
+                'user' => $admin1,
+            ]);
+
+        $admin2 = $container->get('doctrine')
+            ->getRepository(User::class)->findOneBy([
+                'username' => 'Admin2',
+            ]);
+
+        $admin2Tasks = $container->get('doctrine')
+            ->getRepository(Task::class)->findBy([
+                'user' => $admin2,
+            ]);
+
+        $this->assertSame(2, \count($admins));
+        $this->assertSame(3, \count($admin1Tasks));
+        $this->assertSame(3, \count($admin2Tasks));
     }
 
     /**
