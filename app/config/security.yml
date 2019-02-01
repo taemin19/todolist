@@ -8,20 +8,20 @@ security:
                 class: AppBundle:User
                 property: username
 
-    role_hierarchy:
-        ROLE_ADMIN: [ROLE_USER]
-
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
         main:
-            anonymous: ~
+            # this firewall applies to all URLs
             pattern: ^/
+            # denying access is done in access_control or in controllers
+            anonymous: true
             form_login:
                 login_path: login
                 check_path: login
+                # secure the login form against CSRF
                 csrf_token_generator: security.csrf.token_manager
                 always_use_default_target_path:  true
                 default_target_path:  /
@@ -31,6 +31,9 @@ security:
                 target: /
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/users, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_USER }
+        # catch-all for the admin area
+        # additional security lives in the controllers
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
