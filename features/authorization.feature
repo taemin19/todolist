@@ -1,8 +1,8 @@
 Feature: Authorization
   In order to access some resource on the application
   As a user
-  I don't need to be logged in for public pages
-  I need to be logged in for protected pages
+  I need to be logged in
+  I need to have a granted access
 
   Scenario Outline: Access public pages as anonymous user
     When I go to "<url>"
@@ -25,7 +25,7 @@ Feature: Authorization
     Examples:
       | url           |
       | /             |
-      | /tasks        |
+      | /tasks/       |
       | /tasks/done   |
       | /tasks/create |
       | /tasks/1/edit |
@@ -45,7 +45,7 @@ Feature: Authorization
     Examples:
       | url                 |
       | /                   |
-      | /tasks              |
+      | /tasks/             |
       | /tasks/done         |
       | /tasks/create       |
       | /tasks/1/edit       |
@@ -61,7 +61,7 @@ Feature: Authorization
     Examples:
       | url                 |
       | /                   |
-      | /tasks              |
+      | /tasks/             |
       | /tasks/done         |
       | /tasks/create       |
       | /tasks/1/edit       |
