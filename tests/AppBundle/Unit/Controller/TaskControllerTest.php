@@ -6,7 +6,7 @@ use AppBundle\Controller\TaskController;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use AppBundle\Form\TaskType;
-use Doctrine\Common\Persistence\ObjectRepository;
+use AppBundle\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -32,23 +32,19 @@ class TaskControllerTest extends TestCase
      */
     public function testList()
     {
-        $objectRepository = $this->createMock(ObjectRepository::class);
-        $objectRepository->expects($this->once())
-            ->method('findBy');
+        $tokenStorage = $this->getTokenStorageMock();
+
+        $taskRepository = $this->getTaskRepositoryMock('findAllByUser');
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
-            ->method('getRepository')
-            ->with('AppBundle:Task')
-            ->willReturn($objectRepository);
 
         $twig = $this->getTwigMock(true, 'task/list.html.twig', [
-            'tasks' => null,
+            'tasks' => [],
         ]);
 
         $controller = new TaskController($twig, $entityManager);
 
-        $this->assertInstanceOf(Response::class, $controller->listAction());
+        $this->assertInstanceOf(Response::class, $controller->listAction($tokenStorage, $taskRepository));
     }
 
     /**
@@ -62,23 +58,19 @@ class TaskControllerTest extends TestCase
      */
     public function testListDone()
     {
-        $objectRepository = $this->createMock(ObjectRepository::class);
-        $objectRepository->expects($this->once())
-            ->method('findBy');
+        $tokenStorage = $this->getTokenStorageMock();
+
+        $taskRepository = $this->getTaskRepositoryMock('findAllIsDoneByUser');
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
-            ->method('getRepository')
-            ->with('AppBundle:Task')
-            ->willReturn($objectRepository);
 
         $twig = $this->getTwigMock(true, 'task/list_done.html.twig', [
-            'tasks' => null,
+            'tasks' => [],
         ]);
 
         $controller = new TaskController($twig, $entityManager);
 
-        $this->assertInstanceOf(Response::class, $controller->listDoneAction());
+        $this->assertInstanceOf(Response::class, $controller->listDoneAction($tokenStorage, $taskRepository));
     }
 
     /**
@@ -382,5 +374,48 @@ class TaskControllerTest extends TestCase
             ->willReturn('/');
 
         return $routerMock;
+    }
+
+    /**
+     * This helper method mocks TokenInterface|TokenStorageInterface
+     * and checks that getUser()|getToken() is correctly called.
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface
+     */
+    private function getTokenStorageMock()
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willReturn(new User());
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->expects($this->once())
+            ->method('getToken')
+            ->willReturn($token);
+
+        return $tokenStorage;
+    }
+
+    /**
+     * This helper method mocks TaskRepository
+     * and checks that a method is correctly called.
+     *
+     * @param string $method
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|TaskRepository
+     */
+    private function getTaskRepositoryMock(string $method)
+    {
+        $taskRepository = $this->createMock(TaskRepository::class);
+        $taskRepository->expects($this->once())
+            ->method($method)
+            ->with(new User());
+
+        return $taskRepository;
     }
 }

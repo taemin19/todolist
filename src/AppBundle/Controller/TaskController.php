@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
+use AppBundle\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Controller used to manage task contents.
+ *
+ * @Route("/tasks")
+ * @IsGranted("ROLE_USER")
+ */
 class TaskController
 {
     /**
@@ -39,7 +47,10 @@ class TaskController
     }
 
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/", name="task_list")
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param TaskRepository        $taskRepository
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -47,17 +58,24 @@ class TaskController
      *
      * @return Response
      */
-    public function listAction()
+    public function listAction(TokenStorageInterface $tokenStorage, TaskRepository $taskRepository): Response
     {
+        $user = $tokenStorage->getToken()->getUser();
+
+        $tasks = $taskRepository->findAllByUser($user);
+
         return new Response(
             $this->twig->render('task/list.html.twig', [
-                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findBy(['isDone' => false]),
+                'tasks' => $tasks,
             ])
         );
     }
 
     /**
-     * @Route("/tasks/done", name="task_done")
+     * @Route("/done", name="task_done")
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param TaskRepository        $taskRepository
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -65,17 +83,21 @@ class TaskController
      *
      * @return Response
      */
-    public function listDoneAction()
+    public function listDoneAction(TokenStorageInterface $tokenStorage, TaskRepository $taskRepository): Response
     {
+        $user = $tokenStorage->getToken()->getUser();
+
+        $tasks = $taskRepository->findAllIsDoneByUser($user);
+
         return new Response(
             $this->twig->render('task/list_done.html.twig', [
-                'tasks' => $this->entityManager->getRepository('AppBundle:Task')->findBy(['isDone' => true]),
+                'tasks' => $tasks,
             ])
         );
     }
 
     /**
-     * @Route("/tasks/create", name="task_create")
+     * @Route("/create", name="task_create")
      *
      * @param TokenStorageInterface $tokenStorage
      * @param FormFactoryInterface  $formFactory
@@ -87,9 +109,9 @@ class TaskController
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      *
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function createAction(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
+    public function createAction(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory, Request $request, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $user = $tokenStorage->getToken()->getUser();
 
@@ -118,7 +140,8 @@ class TaskController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Route("/{id}/edit", name="task_edit")
+     * @IsGranted("edit", subject="task")
      *
      * @param FormFactoryInterface $formFactory
      * @param Request              $request
@@ -130,9 +153,9 @@ class TaskController
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      *
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function editAction(FormFactoryInterface $formFactory, Task $task, Request $request, FlashBagInterface $flashBag, RouterInterface $router)
+    public function editAction(FormFactoryInterface $formFactory, Task $task, Request $request, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $form = $formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);
@@ -156,15 +179,15 @@ class TaskController
     }
 
     /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @Route("/{id}/toggle", name="task_toggle")
      *
      * @param Task              $task
      * @param FlashBagInterface $flashBag
      * @param RouterInterface   $router
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function toggleTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router)
+    public function toggleTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $task->toggle(!$task->isDone());
         $this->entityManager->flush();
@@ -185,15 +208,16 @@ class TaskController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Route("/{id}/delete", name="task_delete")
+     * @IsGranted("delete", subject="task")
      *
      * @param Task              $task
      * @param FlashBagInterface $flashBag
      * @param RouterInterface   $router
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function deleteTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router)
+    public function deleteTaskAction(Task $task, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
         $this->entityManager->remove($task);
         $this->entityManager->flush();

@@ -35,6 +35,11 @@ class FeatureContext extends MinkContext implements Context
     private $encoder;
 
     /**
+     * @var User
+     */
+    private $currentUser;
+
+    /**
      * Initializes context.
      *
      * Every scenario gets its own context instance.
@@ -75,6 +80,8 @@ class FeatureContext extends MinkContext implements Context
         $user->setPassword($this->encoder->encodePassword($user, 'shield'));
         $user->setEmail('nick@fury.com');
 
+        $this->currentUser = $user;
+
         $em = $this->doctrine->getManager();
         $em->persist($user);
         $em->flush();
@@ -95,6 +102,8 @@ class FeatureContext extends MinkContext implements Context
         $user->setPassword($this->encoder->encodePassword($user, 'avengers'));
         $user->setEmail('the@avengers.com');
         $user->setRoles(['ROLE_ADMIN']);
+
+        $this->currentUser = $user;
 
         $em = $this->doctrine->getManager();
         $em->persist($user);
@@ -158,6 +167,54 @@ class FeatureContext extends MinkContext implements Context
             $task->setTitle($taskHash['title']);
             $task->setContent($taskHash['content']);
             $task->toggle($taskHash['isDone']);
+            $em->persist($task);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @param TableNode $table
+     * @Given the following tasks exist for current user:
+     */
+    public function theFollowingTasksExistForCurrentUser(TableNode $table)
+    {
+        $em = $this->doctrine->getManager();
+
+        foreach ($table->getHash() as $taskHash) {
+            $task = new Task();
+            $task->setTitle($taskHash['title']);
+            $task->setContent($taskHash['content']);
+            $task->toggle($taskHash['isDone']);
+            $task->setUser($this->currentUser);
+
+            $em->merge($task);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @param TableNode $table
+     * @Given the following tasks exist for user Tony:
+     */
+    public function theFollowingTasksExistForUserTony(TableNode $table)
+    {
+        $em = $this->doctrine->getManager();
+
+        $user = new User();
+        $user->setUsername('tony');
+        $user->setPassword($this->encoder->encodePassword($user, 'ironman'));
+        $user->setEmail('tony@stark.com');
+        $em->persist($user);
+
+        foreach ($table->getHash() as $taskHash) {
+            $task = new Task();
+            $task->setTitle($taskHash['title']);
+            $task->setContent($taskHash['content']);
+            $task->toggle($taskHash['isDone']);
+            $task->setUser($user);
+
             $em->persist($task);
         }
 
