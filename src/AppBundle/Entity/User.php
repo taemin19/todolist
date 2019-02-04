@@ -54,9 +54,9 @@ class User implements UserInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="simple_array")
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @var Task[]|ArrayCollection
@@ -68,6 +68,8 @@ class User implements UserInterface
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        // guarantee every user at least has ROLE_USER
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?int
@@ -124,13 +126,7 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
-        }
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): void

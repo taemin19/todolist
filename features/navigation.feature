@@ -9,9 +9,20 @@ Feature: Navigation
     Then I should be on "/"
 
   Examples:
-    | url    |
-    | /      |
-    | /login |
+    | url       |
+    | /         |
+    | /login    |
+    | /register |
+
+  Scenario Outline: Login link
+    Given I am on "<url>"
+    When I click "<link>"
+    Then I should be on "/login"
+
+  Examples:
+    | url       | link            |
+    | /         | Se connecter    |
+    | /register | Identifiez-vous |
 
   @loginAsUserNick
   Scenario Outline: Homepage link
@@ -22,13 +33,13 @@ Feature: Navigation
     When I click "To Do List app"
     Then I should be on "/"
 
-    Examples:
-      | url           |
-      | /             |
-      | /tasks/       |
-      | /tasks/done   |
-      | /tasks/create |
-      | /tasks/1/edit |
+  Examples:
+    | url           |
+    | /             |
+    | /tasks/       |
+    | /tasks/done   |
+    | /tasks/create |
+    | /tasks/1/edit |
 
   @loginAsAdminShield
   Scenario Outline: Homepage link
@@ -39,16 +50,16 @@ Feature: Navigation
     When I click "To Do List app"
     Then I should be on "/"
 
-    Examples:
-      | url                 |
-      | /                   |
-      | /tasks/             |
-      | /tasks/done         |
-      | /tasks/create       |
-      | /tasks/1/edit       |
-      | /admin/users        |
-      | /admin/users/create |
-      | /admin/users/1/edit |
+  Examples:
+    | url                 |
+    | /                   |
+    | /tasks/             |
+    | /tasks/done         |
+    | /tasks/create       |
+    | /tasks/1/edit       |
+    | /admin/users        |
+    | /admin/users/create |
+    | /admin/users/1/edit |
 
   @loginAsUserNick
   Scenario Outline: Tasks list link
