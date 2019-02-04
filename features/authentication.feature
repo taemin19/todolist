@@ -27,14 +27,14 @@ Feature: Authentication
     Given I am on "/"
     And I should see "Se déconnecter"
     When I click "Se déconnecter"
-    Then I should be on "/login"
+    Then I should be on "/"
 
   @loginAsAdminShield
   Scenario: Logout
     Given I am on "/"
     And I should see "Se déconnecter"
     When I click "Se déconnecter"
-    Then I should be on "/login"
+    Then I should be on "/"
 
   Scenario Outline: Throw error message when the user authentication failed
     Given the following users exist:

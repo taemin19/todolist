@@ -15,7 +15,7 @@ Feature: Navigation
 
   @loginAsUserNick
   Scenario Outline: Homepage link
-    Given the following tasks exist:
+    Given the following tasks exist for current user:
       | title    | content            | isDone |
       | Thor     | Must defeat Loki   | 0      |
     And I am on "<url>"
@@ -32,7 +32,7 @@ Feature: Navigation
 
   @loginAsAdminShield
   Scenario Outline: Homepage link
-    Given the following tasks exist:
+    Given the following tasks exist for current user:
       | title    | content            | isDone |
       | Thor     | Must defeat Loki   | 0      |
     And I am on "<url>"
