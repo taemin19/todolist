@@ -141,6 +141,7 @@ class TaskController
 
     /**
      * @Route("/{id}/edit", name="task_edit")
+     * @IsGranted("edit", subject="task")
      *
      * @param FormFactoryInterface $formFactory
      * @param Request              $request
@@ -208,6 +209,7 @@ class TaskController
 
     /**
      * @Route("/{id}/delete", name="task_delete")
+     * @IsGranted("delete", subject="task")
      *
      * @param Task              $task
      * @param FlashBagInterface $flashBag
