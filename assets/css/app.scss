@@ -54,8 +54,17 @@ label {
   text-align: center;
 }
 
-/* Page: ''
+/* Page: 'Homepage'
    ------------------------------------------------------------------------- */
+body#homepage .jumbotron {
+  height: 100%;
+  background-color: #FFFFFF;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+body#homepage .slide-image {
+  width: 100%;
+}
 
 /* Responsive
    ------------------------------------------------------------------------- */
