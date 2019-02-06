@@ -54,15 +54,15 @@ label {
   text-align: center;
 }
 
-/* Page: 'Homepage'
+/* Page: 'Homepage' 'Error'
    ------------------------------------------------------------------------- */
-body#homepage .jumbotron {
+body#homepage .jumbotron, body#error .jumbotron {
   height: 100%;
   background-color: #FFFFFF;
   padding-bottom: 0;
   margin-bottom: 0;
 }
-body#homepage .slide-image {
+body#homepage .slide-image, body#error .slide-image {
   width: 100%;
 }
 
