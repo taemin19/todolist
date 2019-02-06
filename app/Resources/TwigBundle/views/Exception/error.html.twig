@@ -1,9 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Un problème technique est survenu.</h1>{% endblock %}
+{% block body_id 'error' %}
+{% block footer %}{% endblock %}
 
 {% block body %}
-    <div>
-        <a href="{{ path('homepage') }}" class="btn btn-info">Revenir à l'acceuil</a>
-    </div>
+    <section class="jumbotron jumbotron-fluid d-flex flex-column justify-content-center text-center">
+        <div class="container">
+            <h1 class="">{{ status_code }}</h1>
+            <h2 class="pb-4">Un problème technique est survenu.</h2>
+            <img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">
+            <p class="pt-5">
+                <a href="{{ path('homepage') }}" class="btn btn-outline-primary btn-block">Revenir à l'acceuil</a>
+            </p>
+            <p class="mt-5 mb-3 text-muted">Copyright &copy; OpenClassrooms</p>
+        </div>
+    </section>
 {% endblock %}
