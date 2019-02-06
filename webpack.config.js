@@ -6,6 +6,9 @@ Encore
     // the public path used by the web server to access the previous directory
     .setPublicPath('/build')
 
+    // will require an extra script tag for runtime.js
+    .enableSingleRuntimeChunk()
+
     // empty the outputPath dir before each build
     .cleanupOutputBeforeBuild()
 
