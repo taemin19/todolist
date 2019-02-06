@@ -1,17 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Créer un compte</h1>{% endblock %}
-{% block header_img %}{% endblock %}
+{% block title %}
+    {{ parent() }} - Créer un compte
+{% endblock %}
+
+{% block body_id 'register' %}
+
+{# Don't display header and footer #}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('user_register')}) }}
-            {{ form_widget(form) }}
+    <div class="container py-4">
+        <div class="row">
+            <div class="form-register">
+                <div class="text-center">
+                    <a class="navbar-brand" href="{{ path('homepage') }}">
+                        <img class="my-4" src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms">
+                        To Do List app
+                    </a>
+                    <h1 class="mb-3">Créer un compte</h1>
+                    <p class="text-secondary">
+                        Vous disposez déjà d'un compte ? <br>
+                        <a href="{{ path('login') }}">Se connecter</a>
+                    </p>
+                </div>
 
-            <button type="submit" class="btn btn-success pull-right">Créer votre compte ToDoList</button>
-        {{ form_end(form) }}
-    </div>
-    <div class="row">
-        Vous possédez déjà un compte ? <a href="{{ path('login') }}">Identifiez-vous</a>
+                {{ form_start(form, {'action' : path('user_register')}) }}
+                {{ form_widget(form) }}
+
+                <button type="submit" class="btn btn-lg btn-success btn-block my-4">Créer un compte</button>
+                {{ form_end(form) }}
+
+                <p class="text-left mt-2">
+                    <a class="text-dark" href="{{ path('homepage') }}">Retour<i class="fas fa-long-arrow-alt-left ml-2" aria-hidden="true"></i></a>
+                </p>
+
+                <p class="copyright mt-sm-5 mt-2">Copyright &copy; OpenClassrooms</p>
+            </div>
+        </div>
     </div>
 {% endblock %}
