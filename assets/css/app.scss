@@ -13,6 +13,9 @@ h1 {
   font-size: 1.6rem;
 }
 h2 {
+  font-size: 1.3rem;
+}
+h3 {
   font-size: 1.2rem;
 }
 label {
@@ -58,7 +61,7 @@ body#homepage, body#error, body#login, body#register {
   text-align: center;
 }
 
-/* Page: 'Homepage' 'Error'
+/* Common pages: 'Homepage' 'Error'
    ------------------------------------------------------------------------- */
 body#homepage .jumbotron, body#error .jumbotron {
   height: 100%;
@@ -70,7 +73,7 @@ body#homepage .slide-image, body#error .slide-image {
   width: 100%;
 }
 
-/* Page: 'Login' 'Register'
+/* Common pages: 'Login' 'Register'
 ------------------------------------------------------------------------- */
 body#login, body#register {
   display: -ms-flexbox;
@@ -86,15 +89,25 @@ body#login .form-login, body#register .form-register {
   margin: 0 auto;
 }
 
-/* Page: 'New task'
+/* Common pages: 'Task new' 'Task list'
 ------------------------------------------------------------------------- */
-body#tasks_new .jumbotron {
+body#tasks_new .jumbotron,
+body#tasks_list .jumbotron {
   background-color: #FFFFFF;
   margin-top: 69px;
   margin-bottom: 0;
 }
-body#tasks_new .slide-image {
+body#tasks_new .slide-image,
+body#tasks_list .slide-image{
   width: 100%;
+}
+
+/* Page: 'Task list'
+------------------------------------------------------------------------- */
+body#tasks_list .card .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.2rem !important;
 }
 
 /* Responsive
@@ -108,6 +121,9 @@ body#tasks_new .slide-image {
   }
   h2 {
     font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.6rem;
   }
   label {
     font-size: 1rem;
@@ -142,6 +158,9 @@ body#tasks_new .slide-image {
   }
   h2 {
     font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.75rem;
   }
   label {
     font-size: 1.5rem;
