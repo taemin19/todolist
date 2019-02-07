@@ -66,6 +66,22 @@ body#homepage .slide-image, body#error .slide-image {
   width: 100%;
 }
 
+/* Page: 'Login' 'Register'
+------------------------------------------------------------------------- */
+body#login, body#register {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+}
+body#login .form-login, body#register .form-register {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
 /* Responsive
    ------------------------------------------------------------------------- */
 @include media-breakpoint-up(sm) {
