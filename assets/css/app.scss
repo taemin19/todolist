@@ -21,6 +21,9 @@ h3 {
 label {
   font-size: 0.9rem;
 }
+button:focus, a:focus {
+  box-shadow: none !important;
+}
 
 /* Page elements
    ------------------------------------------------------------------------- */
@@ -56,6 +59,9 @@ body#homepage, body#error, body#login, body#register {
   font-size: 0.875rem;
   border-radius: 0.2rem;
 }
+.card a:hover {
+  text-decoration: none;
+}
 .copyright {
   font-size: 0.8rem;
   text-align: center;
@@ -89,16 +95,18 @@ body#login .form-login, body#register .form-register {
   margin: 0 auto;
 }
 
-/* Common pages: 'Task new' 'Task list'
+/* Common pages: 'Task new' 'Task list' 'Task list done'
 ------------------------------------------------------------------------- */
 body#tasks_new .jumbotron,
-body#tasks_list .jumbotron {
+body#tasks_list .jumbotron,
+body#tasks_list_done .jumbotron {
   background-color: #FFFFFF;
   margin-top: 69px;
   margin-bottom: 0;
 }
 body#tasks_new .slide-image,
-body#tasks_list .slide-image{
+body#tasks_list .slide-image,
+body#tasks_list_done .slide-image {
   width: 100%;
 }
 
