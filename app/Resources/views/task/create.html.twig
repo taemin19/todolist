@@ -1,13 +1,30 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    {{ parent() }} - Créer une tâche
+{% endblock %}
+
+{% block body_id 'tasks_new' %}
+
 {% block body %}
-    <div class="row">
+    <section class="jumbotron jumbotron-fluid d-flex flex-column justify-content-center text-center">
+        <div class="container">
+            <h2 class="pb-3">Créer une nouvelle tâche</h2>
+            <img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="divider"></div>
         {{ form_start(form, {'action' : path('task_create')}) }}
             {{ form_widget(form) }}
 
-            <button type="submit" class="btn btn-success pull-right">Ajouter</button>
+            <button type="submit" class="btn btn-success">Ajouter</button>
         {{ form_end(form) }}
 
-        <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
+        <div class="py-5">
+            <a href="{{ path('task_list') }}" class="btn btn-outline-info btn-block mb-3">Consulter la liste des tâches à faire</a>
+            <a href="{{ path('task_done') }}" class="btn btn-outline-secondary btn-block">Consulter la liste des tâches terminées</a>
+        </div>
     </div>
 {% endblock %}
