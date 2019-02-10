@@ -95,11 +95,13 @@ body#login .form-login, body#register .form-register {
   margin: 0 auto;
 }
 
-/* Common pages: 'Tasks new' 'Tasks list' 'Tasks list done' 'Users list'
+/* Common pages: 'Tasks new' 'Tasks list' 'Tasks list done'
+                 'Users new' 'Users list'
 ------------------------------------------------------------------------- */
 body#tasks_new .jumbotron,
 body#tasks_list .jumbotron,
 body#tasks_list_done .jumbotron,
+body#users_new .jumbotron,
 body#users_list .jumbotron {
   background-color: #FFFFFF;
   margin-top: 69px;
