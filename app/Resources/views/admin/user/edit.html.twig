@@ -1,14 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Modifier <strong>{{ user.username }}</strong></h1>{% endblock %}
-{% block header_img %}{% endblock %}
+{% block title %}
+    {{ parent() }} - Modifier un utilisateur
+{% endblock %}
+
+{% block body_id 'users_edit' %}
 
 {% block body %}
-    <div class="row">
+    <section class="jumbotron jumbotron-fluid d-flex flex-column justify-content-center text-center">
+        <div class="container">
+            <h2 class="pb-3">{{ user.username }}</h2>
+        </div>
+    </section>
+
+    <div class="container">
         {{ form_start(form, {'action' : path('admin_user_edit', {'id' : user.id})}) }}
         {{ form_widget(form) }}
 
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
+        <button type="submit" class="btn btn-success">Modifier</button>
         {{ form_end(form) }}
+
+        <div class="py-5">
+            <a href="{{ path('admin_user_create') }}" class="btn btn-outline-success btn-block mb-3">Créer un nouveau utilisateur</a>
+            <a href="{{ path('admin_user_list') }}" class="btn btn-outline-info btn-block mb-3">Consulter la liste des utilisateurs</a>
+        </div>
     </div>
 {% endblock %}
