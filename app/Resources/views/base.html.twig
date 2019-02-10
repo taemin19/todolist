@@ -66,19 +66,6 @@
             </header>
         {% endblock %}
 
-        <div class="messages text-center">
-            {% for type, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-dismissible alert-{{ type }} fade show mb-0" role="alert">
-                        {{ message}}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        </div>
-
         {% block body %}{% endblock %}
 
         {% block footer %}
@@ -86,7 +73,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
-                            <p class="copyright">Copyright &copy; OpenClassrooms</p>
+                            <p class="copyright">Copyright &copy; {{ 'now'|date('Y') }} - OpenClassrooms</p>
                         </div>
                     </div>
                 </div>

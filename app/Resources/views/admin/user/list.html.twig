@@ -9,7 +9,9 @@
 {% block body %}
     <section class="jumbotron jumbotron-fluid d-flex flex-column justify-content-center text-center">
         <div class="container">
-            <h2 class="pb-3">Liste des utilisateurs</h2>
+            {{ include('_flash_messages.html.twig') }}
+
+            <h2 class="py-3">Liste des utilisateurs</h2>
         </div>
     </section>
 
