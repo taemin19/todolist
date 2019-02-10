@@ -96,14 +96,15 @@ body#login .form-login, body#register .form-register {
 }
 
 /* Common pages: 'Tasks new' 'Tasks list' 'Tasks list done' 'Tasks edit'
-                 'Users new' 'Users list'
+                 'Users new' 'Users list' 'Users edit'
 ------------------------------------------------------------------------- */
 body#tasks_new .jumbotron,
 body#tasks_list .jumbotron,
 body#tasks_list_done .jumbotron,
 body#tasks_edit .jumbotron,
 body#users_new .jumbotron,
-body#users_list .jumbotron {
+body#users_list .jumbotron,
+body#users_edit .jumbotron {
   background-color: #FFFFFF;
   margin-top: 69px;
   margin-bottom: 0;
