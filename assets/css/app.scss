@@ -6,7 +6,7 @@
 
 /* Basic styles
    ------------------------------------------------------------------------- */
-p {
+p, th, td {
   font-size: 0.9rem;
 }
 h1 {
@@ -95,11 +95,12 @@ body#login .form-login, body#register .form-register {
   margin: 0 auto;
 }
 
-/* Common pages: 'Task new' 'Task list' 'Task list done'
+/* Common pages: 'Tasks new' 'Tasks list' 'Tasks list done' 'Users list'
 ------------------------------------------------------------------------- */
 body#tasks_new .jumbotron,
 body#tasks_list .jumbotron,
-body#tasks_list_done .jumbotron {
+body#tasks_list_done .jumbotron,
+body#users_list .jumbotron {
   background-color: #FFFFFF;
   margin-top: 69px;
   margin-bottom: 0;
@@ -110,9 +111,17 @@ body#tasks_list_done .slide-image {
   width: 100%;
 }
 
-/* Page: 'Task list'
+/* Page: 'Tasks list'
 ------------------------------------------------------------------------- */
 body#tasks_list .card .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.2rem !important;
+}
+
+/* Page: 'Users list'
+------------------------------------------------------------------------- */
+body#users_list table .btn {
   padding: 0.25rem 0.5rem !important;
   font-size: 0.875rem !important;
   border-radius: 0.2rem !important;
