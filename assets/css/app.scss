@@ -41,9 +41,6 @@ body#homepage, body#error, body#login, body#register {
   font-size: 1.1rem;
   color: #000000;
 }
-.navbar-light .navbar-nav .nav-link {
-  color: #000000;
-}
 .navbar-toggler-icon {
   width: 1em;
   height: 1em;
@@ -87,6 +84,9 @@ body#login, body#register {
   display: flex;
   -webkit-box-pack: center;
   justify-content: center;
+}
+body#login .navbar-brand:hover, body#register .navbar-brand:hover {
+  color: #000000;
 }
 body#login .form-login, body#register .form-register {
   width: 100%;

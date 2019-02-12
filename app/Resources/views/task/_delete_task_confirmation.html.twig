@@ -9,9 +9,9 @@
                 <button type="button" class="btn btn-light" data-dismiss="modal">
                     Annuler
                 </button>
-                <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post" data-confirmation="true">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete') }}"/>
-                    <button class="btn btn-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-danger">Confirmer</button>
                 </form>
             </div>
         </div>
