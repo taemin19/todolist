@@ -17,7 +17,7 @@
         {{ form_start(form, {'action' : path('admin_user_create')}) }}
             {{ form_widget(form) }}
 
-            <button type="submit" class="btn btn-success">Ajouter</button>
+            <button type="submit" class="btn btn-success" formnovalidate>Ajouter</button>
         {{ form_end(form) }}
 
         <div class="py-5">

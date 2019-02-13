@@ -17,7 +17,7 @@
         {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
             {{ form_widget(form) }}
 
-            <button type="submit" class="btn btn-success">Modifier</button>
+            <button type="submit" class="btn btn-success" formnovalidate>Modifier</button>
         {{ form_end(form) }}
 
         <p class="py-5">
