@@ -49,6 +49,7 @@ class UserTypeTest extends TypeTestCase
             'username' => 'user',
             'password' => 'password',
             'email' => 'user@email.com',
+            'roles' => ['ROLE_USER'],
         ];
 
         $object = new User();
