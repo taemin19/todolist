@@ -11,12 +11,19 @@ matrix:
     - php: 7.1
     - php: 7.2
 
+addons:
+  chrome: stable
+
 before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222
 
 install:
   - composer install
+
+before_script:
+  - ./bin/console server:start
 
 script:
   # this checks that the source code follows the Symfony Code Syntax rules
