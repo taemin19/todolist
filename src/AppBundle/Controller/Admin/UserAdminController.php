@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\User;
+use AppBundle\Form\AdminUserEditType;
 use AppBundle\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -130,7 +131,7 @@ class UserAdminController
      */
     public function editAction(FormFactoryInterface $formFactory, User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag, RouterInterface $router): Response
     {
-        $form = $formFactory->create(UserType::class, $user);
+        $form = $formFactory->create(AdminUserEditType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
