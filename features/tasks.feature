@@ -11,13 +11,13 @@ Feature: Tasks
     And I fill in "task_content" with "Must defeat Loki"
     And I press "Ajouter"
     Then I should be on "/tasks/"
-    And I should see "Superbe ! La tâche a bien été ajoutée."
+    And I should see "La tâche a bien été ajoutée."
     And I should see 1 tasks
     And I should see "Thor"
     And I should see "Must defeat Loki"
 
   @loginAsUserNick
-  Scenario: View not done tasks
+  Scenario: View tasks to do
     Given the following tasks exist for current user:
       | title    | content            | isDone |
       | Thor     | Must defeat Loki   | 0      |
@@ -68,7 +68,7 @@ Feature: Tasks
     And I fill in "task_content" with "<content>"
     And I press "Modifier"
     Then I should be on "/tasks/"
-    And I should see "Superbe ! La tâche a bien été modifiée."
+    And I should see "La tâche a bien été modifiée."
     And I should see "<title>"
     And I should see "<content>"
 
@@ -78,18 +78,28 @@ Feature: Tasks
       | Thor     | Must defeat Ultron |
 
   @loginAsUserNick
-  Scenario: Delete
+  Scenario: Delete (confirm)
     Given the following tasks exist for current user:
       | title    | content            | isDone |
       | Thor     | Must defeat Loki   | 0      |
-      | Iron Man | Must defeat Ultron | 0      |
     And I am on "/tasks/"
-    And I should see 2 tasks
-    When I press the 2nd "Supprimer" button
-    Then I should see "Superbe ! La tâche a bien été supprimée."
     And I should see 1 tasks
-    And I should not see "Iron Man"
-    But I should see "Thor"
+    When I press "Supprimer"
+    And I press "Confirmer"
+    And I should see 0 tasks
+    And I should not see "Thor"
+
+  @loginAsUserNick
+  Scenario: Delete (cancel)
+    Given the following tasks exist for current user:
+      | title    | content            | isDone |
+      | Thor     | Must defeat Loki   | 0      |
+    And I am on "/tasks/"
+    And I should see 1 tasks
+    When I press "Supprimer"
+    And I press "Annuler"
+    And I should see 1 tasks
+    And I should see "Thor"
 
   @loginAsUserNick
   Scenario: Mark as done
@@ -98,10 +108,10 @@ Feature: Tasks
       | Thor     | Must defeat Loki   | 0      |
       | Iron Man | Must defeat Ultron | 0      |
     And I am on "/tasks/"
-    And I should see 2 tasks as not done
+    And I should see 2 tasks to do
     When I press the 1st "Marquer comme faite" button
-    Then I should see "Superbe ! La tâche Thor a bien été marquée comme faite."
-    And I should see 1 tasks as not done
+    Then I should see "La tâche Thor a bien été marquée comme faite."
+    And I should see 1 tasks to do
     And I should see "Iron Man"
     And I should see "Must defeat Ultron"
 
@@ -112,10 +122,10 @@ Feature: Tasks
       | Thor     | Must defeat Loki   | 1      |
       | Iron Man | Must defeat Ultron | 1      |
     And I am on "/tasks/done"
-    And I should see 2 tasks as done
+    And I should see 2 done tasks
     When I press the 1st "Marquer comme non terminée" button
-    Then I should see "Superbe ! La tâche Thor a bien été marquée comme non terminée."
-    And I should see 1 tasks as done
+    Then I should see "La tâche Thor a bien été marquée comme non terminée."
+    And I should see 1 done tasks
     And I should see "Iron Man"
     And I should see "Must defeat Ultron"
 
