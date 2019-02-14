@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Unit\Controller;
 
 use AppBundle\Controller\Admin\UserAdminController;
 use AppBundle\Entity\User;
+use AppBundle\Form\AdminUserEditType;
 use AppBundle\Form\UserType;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -70,7 +71,7 @@ class UserAdminControllerTest extends TestCase
 
         $form = $this->getFormMock($formIsSubmitted, $request);
 
-        $formFactory = $this->getFormInterfaceMock($form, $user);
+        $formFactory = $this->getFormInterfaceMock(UserType::class, $form, $user);
 
         $passwordEncoder = $this->getUserPasswordEncoderMock($formIsSubmitted, $user);
 
@@ -110,7 +111,7 @@ class UserAdminControllerTest extends TestCase
 
         $form = $this->getFormMock($formIsSubmitted, $request);
 
-        $formFactory = $this->getFormInterfaceMock($form, $user);
+        $formFactory = $this->getFormInterfaceMock(AdminUserEditType::class, $form, $user);
 
         $passwordEncoder = $this->getUserPasswordEncoderMock($formIsSubmitted, $user);
 
@@ -167,6 +168,7 @@ class UserAdminControllerTest extends TestCase
      * This helper method mocks FormFactoryInterface
      * and checks that create() is correctly called.
      *
+     * @param $formType
      * @param $form
      * @param User $user
      *
@@ -174,12 +176,12 @@ class UserAdminControllerTest extends TestCase
      *
      * @return \PHPUnit\Framework\MockObject\MockObject|FormFactoryInterface
      */
-    private function getFormInterfaceMock($form, User $user)
+    private function getFormInterfaceMock($formType, $form, User $user)
     {
         $formFactoryMock = $this->createMock(FormFactoryInterface::class);
         $formFactoryMock->expects($this->once())
             ->method('create')
-            ->with(UserType::class, $user)
+            ->with($formType, $user)
             ->willReturn($form);
 
         return $formFactoryMock;
