@@ -9,9 +9,9 @@ Feature: Registration
     And I fill in "user_register_password_first" with "shield"
     And I fill in "user_register_password_second" with "shield"
     And I fill in "user_register_email" with "nick@fury.com"
-    And I press "Créer votre compte ToDoList"
+    And I press "Créer un compte"
     Then I should be on homepage
-    And I should see "Superbe ! Bienvenue Nick , votre compte a bien été crée."
+    And I should see "Bienvenue nick , votre compte a bien été crée."
 
   Scenario Outline: Throw some error messages when the user registration failed
     Given the following users exist:
@@ -22,7 +22,7 @@ Feature: Registration
     And I fill in "user_register_password_first" with "<password_first>"
     And I fill in "user_register_password_second" with "<password_second>"
     And I fill in "user_register_email" with "<email>"
-    And I press "Créer votre compte ToDoList"
+    And I press "Créer un compte"
     Then I should see "<error message>"
 
     Examples:

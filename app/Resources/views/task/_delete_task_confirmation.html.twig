@@ -1,0 +1,19 @@
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>{{ task.title }}</h3>
+                <p>Etes-vous sûr de vouloir supprimer cette tâche ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">
+                    Annuler
+                </button>
+                <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post" data-confirmation="true">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete') }}"/>
+                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

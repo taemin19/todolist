@@ -24,6 +24,7 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": "3.4.*",
+        "symfony/webpack-encore-bundle": "^1.1",
         "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
@@ -34,6 +35,7 @@
         "behat/symfony2-extension": "^2.1",
         "behatch/contexts": "^3.2",
         "dama/doctrine-test-bundle": "^5.0",
+        "dmore/behat-chrome-extension": "^1.2",
         "doctrine/doctrine-fixtures-bundle": "^3.1",
         "friendsofphp/php-cs-fixer": "^2.13",
         "fzaninotto/faker": "^1.8",

@@ -89,7 +89,7 @@ class FeatureContext extends MinkContext implements Context
         $this->visitPath('/login');
         $this->fillField('username', 'nick');
         $this->fillField('password', 'shield');
-        $this->pressButton('Se connecter');
+        $this->pressButton('Connexion');
     }
 
     /**
@@ -112,7 +112,7 @@ class FeatureContext extends MinkContext implements Context
         $this->visitPath('/login');
         $this->fillField('username', 'shield');
         $this->fillField('password', 'avengers');
-        $this->pressButton('Se connecter');
+        $this->pressButton('Connexion');
     }
 
     /**
@@ -252,30 +252,43 @@ class FeatureContext extends MinkContext implements Context
      */
     public function iShouldSeeTasks($num)
     {
-        $this->assertSession()->elementsCount('css', '.thumbnail', (int) $num);
+        $this->assertSession()->elementsCount('css', '.card', (int) $num);
     }
 
     /**
-     * @Then /^(?:|I )should see (?P<num>\d+) tasks as not done?$/
+     * @Then /^(?:|I )should see (?P<num>\d+) tasks to do?$/
      *
      * @param $num
      *
      * @throws \Behat\Mink\Exception\ExpectationException
      */
-    public function iShouldSeeTasksAsNotDone($num)
+    public function iShouldSeeTasksToDo($num)
     {
-        $this->assertSession()->elementsCount('css', '.glyphicon-remove', (int) $num);
+        $this->assertSession()->elementsCount('css', '.fa-square', (int) $num);
     }
 
     /**
-     * @Then /^(?:|I )should see (?P<num>\d+) tasks as done?$/
+     * @Then /^(?:|I )should see (?P<num>\d+) done tasks?$/
      *
      * @param $num
      *
      * @throws \Behat\Mink\Exception\ExpectationException
      */
-    public function iShouldSeeTasksAsDone($num)
+    public function iShouldSeeDoneTasks($num)
     {
-        $this->assertSession()->elementsCount('css', '.glyphicon-ok', (int) $num);
+        $this->assertSession()->elementsCount('css', '.fa-check-square', (int) $num);
+    }
+
+    /**
+     * Pauses the scenario until the user presses a key. Useful when debugging a scenario.
+     *
+     * @Then (I )break
+     */
+    public function iPutABreakpoint()
+    {
+        fwrite(STDOUT, "\033[s    \033[93m[Breakpoint] Press \033[1;93m[RETURN]\033[0;93m to continue...\033[0m");
+        while ('' === fgets(STDIN, 1024)) {
+        }
+        fwrite(STDOUT, "\033[u");
     }
 }

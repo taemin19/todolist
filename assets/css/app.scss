@@ -1,0 +1,202 @@
+@import 'customVariables';
+@import '~bootstrap/scss/bootstrap';
+
+/* Fonts
+   ------------------------------------------------------------------------- */
+
+/* Basic styles
+   ------------------------------------------------------------------------- */
+p, th, td {
+  font-size: 0.9rem;
+}
+h1 {
+  font-size: 1.6rem;
+}
+h2 {
+  font-size: 1.3rem;
+}
+h3 {
+  font-size: 1.2rem;
+}
+label {
+  font-size: 0.9rem;
+}
+button:focus, a:focus {
+  box-shadow: none !important;
+}
+
+/* Page elements
+   ------------------------------------------------------------------------- */
+html,
+body#homepage, body#error, body#login, body#register {
+  height: 100%;
+}
+
+/* Common page elements
+   ------------------------------------------------------------------------- */
+.navbar {
+  background-color: #e3f2fd;
+}
+.navbar-brand {
+  font-size: 1.1rem;
+  color: #000000;
+}
+.navbar-toggler-icon {
+  width: 1em;
+  height: 1em;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+.dropdown-toggle .fa-user-circle {
+  font-size: 1.5rem;
+}
+.btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+.card a:hover {
+  text-decoration: none;
+}
+.copyright {
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Common pages: 'Homepage' 'Error'
+   ------------------------------------------------------------------------- */
+body#homepage .jumbotron, body#error .jumbotron {
+  height: 100%;
+  background-color: #FFFFFF;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+body#homepage .slide-image, body#error .slide-image {
+  width: 100%;
+}
+
+/* Common pages: 'Login' 'Register'
+------------------------------------------------------------------------- */
+body#login, body#register {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+}
+body#login .navbar-brand:hover, body#register .navbar-brand:hover {
+  color: #000000;
+}
+body#login .form-login, body#register .form-register {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+/* Common pages: 'Tasks new' 'Tasks list' 'Tasks list done' 'Tasks edit'
+                 'Users new' 'Users list' 'Users edit'
+------------------------------------------------------------------------- */
+body#tasks_new .jumbotron,
+body#tasks_list .jumbotron,
+body#tasks_list_done .jumbotron,
+body#tasks_edit .jumbotron,
+body#users_new .jumbotron,
+body#users_list .jumbotron,
+body#users_edit .jumbotron {
+  background-color: #FFFFFF;
+  margin-top: 69px;
+  margin-bottom: 0;
+}
+body#tasks_new .slide-image,
+body#tasks_list .slide-image,
+body#tasks_list_done .slide-image {
+  width: 100%;
+}
+
+/* Page: 'Tasks list'
+------------------------------------------------------------------------- */
+body#tasks_list .card .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.2rem !important;
+}
+
+/* Page: 'Users list'
+------------------------------------------------------------------------- */
+body#users_list table .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.2rem !important;
+}
+
+/* Responsive
+   ------------------------------------------------------------------------- */
+@include media-breakpoint-up(sm) {
+  p {
+    font-size: 1rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.6rem;
+  }
+  label {
+    font-size: 1rem;
+  }
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  .navbar-toggler-icon {
+    width: 1.25em;
+    height: 1.25em;
+  }
+  .fa-user-circle {
+    font-size: 2rem;
+  }
+  .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+  }
+  .copyright {
+    font-size: 1rem;
+  }
+}
+@include media-breakpoint-up(md) {
+  label {
+    font-size: 1.25rem;
+  }
+}
+@include media-breakpoint-up(lg) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.75rem;
+  }
+  label {
+    font-size: 1.5rem;
+  }
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  .navbar-toggler-icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+  }
+}

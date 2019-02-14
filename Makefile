@@ -7,9 +7,19 @@ help:
 ## Main commands
 dev: ## Install the app a development environment
 	composer install
+	yarn install
+	make encore--dev
 
 prod: ## Install the app for a production environment
 	compser install --no-dev --optimize-autoloader
+	yarn install
+	make encore--prod
+
+encore--dev: ## Compile assets for development
+	yarn run encore dev
+
+encore--prod: ## Compile assets and minify them for production
+	yarn run encore production
 
 auto: composer.json ## Update the autoloader
 	composer dump-autoload -a -o

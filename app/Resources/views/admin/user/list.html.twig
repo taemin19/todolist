@@ -1,44 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}{% endblock %}
+{% block title %}
+    {{ parent() }} - List des utilisateurs
+{% endblock %}
 
-{% block header_title %}<h1>Liste des utilisateurs</h1>{% endblock %}
+{% block body_id 'users_list' %}
 
 {% block body %}
-    {% if users|length == 0 %}
-        <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('admin_user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+    <section class="jumbotron jumbotron-fluid d-flex flex-column justify-content-center text-center">
+        <div class="container">
+            {{ include('_flash_messages.html.twig') }}
+
+            <h2 class="py-3">Liste des utilisateurs</h2>
         </div>
-    {% else %}
+    </section>
+
+    <div class="container main">
         <div class="row">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nom d'utilisateur</th>
-                    <th>Adresse d'utilisateur</th>
-                    <th>Rôle</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in users %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            {% for role in user.roles %}
-                                {{ role }}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <a href="{{ path('admin_user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if users|length == 0 %}
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        <p>Il n'y a pas encore d'utilisateur enregistré.</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom d'utilisateur</th>
+                            <th>Adresse d'utilisateur</th>
+                            <th>Rôle</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% for role in user.roles %}
+                                        {{ role }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin_user_edit', {'id' : user.id}) }}" class="btn btn-success">Edit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="py-5">
+            <a href="{{ path('admin_user_create') }}" class="btn btn-outline-success btn-block mb-3">Créer un nouveau utilisateur</a>
+        </div>
+    </div>
 {% endblock %}

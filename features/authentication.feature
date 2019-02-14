@@ -13,9 +13,8 @@ Feature: Authentication
     And I am on "/login"
     When I fill in "username" with "<username>"
     And I fill in "password" with "<password>"
-    And I press "Se connecter"
+    And I press "Connexion"
     Then I should be on "/"
-    And I should see "Se déconnecter"
 
     Examples:
       | username | password |
@@ -25,15 +24,15 @@ Feature: Authentication
   @loginAsUserNick
   Scenario: Logout
     Given I am on "/"
-    And I should see "Se déconnecter"
-    When I click "Se déconnecter"
+    When I click "navbarDropdownMenuLink"
+    And I click "Se déconnecter"
     Then I should be on "/"
 
   @loginAsAdminShield
   Scenario: Logout
     Given I am on "/"
-    And I should see "Se déconnecter"
-    When I click "Se déconnecter"
+    When I click "navbarDropdownMenuLink"
+    And I click "Se déconnecter"
     Then I should be on "/"
 
   Scenario Outline: Throw error message when the user authentication failed
@@ -43,9 +42,9 @@ Feature: Authentication
     And I am on "/login"
     When I fill in "username" with "<username>"
     And I fill in "password" with "<password>"
-    And I press "Se connecter"
+    And I press "Connexion"
     Then I should be on "/login"
-    And I should see "Invalid credentials"
+    And I should see "Bad credentials"
     And the "username" field should contain "<username>"
 
     Examples:
