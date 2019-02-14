@@ -3,7 +3,7 @@
 namespace Tests\AppBundle\Unit\Form;
 
 use AppBundle\Entity\User;
-use AppBundle\Form\UserType;
+use AppBundle\Form\UserRegisterType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Test\TypeTestCase;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserTypeTest extends TypeTestCase
+class UserRegisterTypeTest extends TypeTestCase
 {
     private $validator;
 
@@ -49,11 +49,10 @@ class UserTypeTest extends TypeTestCase
             'username' => 'user',
             'password' => 'password',
             'email' => 'user@email.com',
-            'roles' => ['ROLE_USER'],
         ];
 
         $object = new User();
-        $form = $this->factory->create(UserType::class, $object);
+        $form = $this->factory->create(UserRegisterType::class, $object);
 
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());

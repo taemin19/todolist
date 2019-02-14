@@ -41,11 +41,9 @@ Feature: Users
       | username | password | email         |
       | nick     | shield   | nick@fury.com |
     And I am on "/admin/users/2/edit"
-    When I fill in "user_username" with "<username>"
-    And I fill in "user_password_first" with "<password_first>"
-    And I fill in "user_password_second" with "<password_second>"
-    And I fill in "user_email" with "<email>"
-    And I select "<role>" from "user_roles_0"
+    When I fill in "admin_user_edit_username" with "<username>"
+    And I fill in "admin_user_edit_email" with "<email>"
+    And I select "<role>" from "admin_user_edit_roles_0"
     And I press "Modifier"
     Then I should be on "/admin/users"
     And I should see "L'utilisateur a bien été modifié"
@@ -54,11 +52,10 @@ Feature: Users
     And I should see "<role>"
 
     Examples:
-      | username | password_first | password_second | email            | role       |
-      | tony     | shield         | shield          | nick@fury.com    | ROLE_USER  |
-      | tony     | ironman        | ironman         | nick@fury.com    | ROLE_USER  |
-      | tony     | ironman        | ironman         | tony@stark.com   | ROLE_USER  |
-      | tony     | ironman        | ironman         | tony@stark.com   | ROLE_ADMIN |
+      | username | email            | role       |
+      | tony     | nick@fury.com    | ROLE_USER  |
+      | tony     | tony@stark.com   | ROLE_USER  |
+      | tony     | tony@stark.com   | ROLE_ADMIN |
 
   @loginAsAdminShield
   Scenario Outline: Throw some error messages when the user creation failed
@@ -90,18 +87,14 @@ Feature: Users
       | nick     | shield   | nick@fury.com  |
       | tony     | ironman  | tony@stark.com |
     And I am on "/admin/users/1/edit"
-    When I fill in "user_username" with "<username>"
-    And I fill in "user_password_first" with "<password_first>"
-    And I fill in "user_password_second" with "<password_second>"
-    And I fill in "user_email" with "<email>"
+    When I fill in "admin_user_edit_username" with "<username>"
+    And I fill in "admin_user_edit_email" with "<email>"
     And I press "Modifier"
     Then I should see "<error message>"
 
     Examples:
-      | error message                                | username | password_first | password_second | email          |
-      | Vous devez saisir un nom d'utilisateur.      |          | shield         | shield          | nick@fury.com  |
-      | Vous devez saisir une adresse email.         | nick     | shield         | shield          |                |
-      | Le format de l'adresse n'est pas correcte.   | nick     | shield         | shield          | nick@fury      |
-      | Cet e-mail est déjà utilisé.                 | nick     | shield         | shield          | tony@stark.com |
-      | Vous devez saisir un mot de passe.           | nick     |                |                 | nick@fury.com  |
-      | Les deux mots de passe doivent correspondre. | nick     | avengers       | shield          | nick@fury.com  |
+      | error message                                | username | email          |
+      | Vous devez saisir un nom d'utilisateur.      |          | nick@fury.com  |
+      | Vous devez saisir une adresse email.         | nick     |                |
+      | Le format de l'adresse n'est pas correcte.   | nick     | nick@fury      |
+      | Cet e-mail est déjà utilisé.                 | nick     | tony@stark.com |
