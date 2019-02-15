@@ -14,14 +14,16 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class TaskVoterTest extends TestCase
 {
     /**
-     * @param string $attribute
-     * @param Task   $task
-     * @param User   $user
+     * This test checks that the Voter handle all the cases properly.
+     *
+     * @param string    $attribute
+     * @param Task|null $task
+     * @param User|null $user
      * @param $expectedVote
      *
      * @dataProvider provideCases
      */
-    public function testVote(string $attribute, Task $task, ?User $user, $expectedVote)
+    public function testVote(string $attribute, ?Task $task, ?User $user, $expectedVote)
     {
         $voter = new TaskVoter();
 
@@ -52,6 +54,8 @@ class TaskVoterTest extends TestCase
     public function provideCases()
     {
         return [
+            'attribute is not supported' => ['', null, null, Voter::ACCESS_ABSTAIN],
+            'not an instance of Task' => ['edit', null, null, Voter::ACCESS_ABSTAIN],
             'anonymous cannot edit' => ['edit', $this->createTask(1), null, Voter::ACCESS_DENIED],
             'anonymous cannot delete' => ['delete', $this->createTask(1), null, Voter::ACCESS_DENIED],
             'non-owner cannot edit' => ['edit', $this->createTask(1), $this->createUser(2), Voter::ACCESS_DENIED],
