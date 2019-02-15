@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Integration\Form;
+namespace Tests\AppBundle\Integration\Repository;
 
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
