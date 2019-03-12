@@ -36,6 +36,7 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('isDone', false)
             ->orderBy('t.createdAt', 'DESC')
             ->getQuery()
+            ->useResultCache(true, 3600, 'tasks_all')
             ->getResult();
     }
 
@@ -53,6 +54,7 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('isDone', true)
             ->orderBy('t.createdAt', 'DESC')
             ->getQuery()
+            ->useResultCache(true, 3600, 'tasks_all_done')
             ->getResult();
     }
 }
