@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Entity\User;
 use AppBundle\Form\AdminUserEditType;
 use AppBundle\Form\UserType;
+use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -51,17 +52,21 @@ class UserAdminController
      *
      * @Route("/users", methods={"GET"}, name="admin_user_list")
      *
+     * @param UserRepository $userRepository
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      *
      * @return Response
      */
-    public function listAction(): Response
+    public function listAction(UserRepository $userRepository): Response
     {
+        $users = $userRepository->findAll();
+
         return new Response(
             $this->twig->render('admin/user/list.html.twig', [
-                'users' => $this->entityManager->getRepository('AppBundle:User')->findAll(),
+                'users' => $users,
             ])
         );
     }
