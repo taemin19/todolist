@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table("user")
  * @ORM\Entity
+ * @ORM\EntityListeners({"AppBundle\EventListener\UserListener"})
  * @UniqueEntity("username", message="Ce nom d'utilisateur est déjà utilisé.")
  * @UniqueEntity("email", message="Cet e-mail est déjà utilisé.")
  */
