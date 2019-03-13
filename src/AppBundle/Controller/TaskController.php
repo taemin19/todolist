@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class TaskController
 {
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $twig;
 
@@ -37,10 +37,10 @@ class TaskController
     /**
      * TaskController constructor.
      *
-     * @param \Twig_Environment      $twig
+     * @param \Twig\Environment      $twig
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(\Twig_Environment $twig, EntityManagerInterface $entityManager)
+    public function __construct(\Twig\Environment $twig, EntityManagerInterface $entityManager)
     {
         $this->twig = $twig;
         $this->entityManager = $entityManager;
@@ -52,9 +52,9 @@ class TaskController
      * @param TokenStorageInterface $tokenStorage
      * @param TaskRepository        $taskRepository
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      *
      * @return Response
      */
@@ -77,9 +77,9 @@ class TaskController
      * @param TokenStorageInterface $tokenStorage
      * @param TaskRepository        $taskRepository
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      *
      * @return Response
      */
@@ -105,9 +105,9 @@ class TaskController
      * @param FlashBagInterface     $flashBag
      * @param RouterInterface       $router
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      *
      * @return Response
      */
@@ -144,14 +144,14 @@ class TaskController
      * @IsGranted("edit", subject="task")
      *
      * @param FormFactoryInterface $formFactory
+     * @param Task                 $task
      * @param Request              $request
      * @param FlashBagInterface    $flashBag
-     * @param Task                 $task
      * @param RouterInterface      $router
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      *
      * @return Response
      */

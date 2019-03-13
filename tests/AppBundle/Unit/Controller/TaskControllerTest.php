@@ -26,9 +26,9 @@ class TaskControllerTest extends TestCase
      * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testList()
     {
@@ -52,9 +52,9 @@ class TaskControllerTest extends TestCase
      * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testListDone()
     {
@@ -77,13 +77,13 @@ class TaskControllerTest extends TestCase
      * This test checks that the method createAction() is correctly returned
      * and checks that the methods are correctly called or not.
      *
-     * @param string $className
      * @param bool   $formIsSubmitted
+     * @param string $className
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @dataProvider provideFormIsSubmitted
      */
     public function testCreate(bool $formIsSubmitted, string $className)
@@ -125,13 +125,13 @@ class TaskControllerTest extends TestCase
      * This test checks that the method editAction() is correctly returned
      * and checks that the methods are correctly called or not.
      *
-     * @param string $className
      * @param bool   $formIsSubmitted
+     * @param string $className
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @dataProvider provideFormIsSubmitted
      */
     public function testEdit(bool $formIsSubmitted, string $className)
@@ -249,7 +249,7 @@ class TaskControllerTest extends TestCase
      */
     private function getTwigMock(bool $callRender, string $template = '', array $parameters = [])
     {
-        $twigMock = $this->createMock(\Twig_Environment::class);
+        $twigMock = $this->createMock(\Twig\Environment::class);
         $twigMock->expects($callRender ? $this->once() : $this->never())
             ->method('render')
             ->with($template, $parameters);

@@ -9,16 +9,16 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController
 {
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $twig;
 
     /**
      * SecurityController constructor.
      *
-     * @param \Twig_Environment $twig
+     * @param \Twig\Environment $twig
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig\Environment $twig)
     {
         $this->twig = $twig;
     }
@@ -28,9 +28,9 @@ class SecurityController
      *
      * @param AuthenticationUtils $authenticationUtils
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      *
      * @return Response
      */
