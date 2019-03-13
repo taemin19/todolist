@@ -32,7 +32,7 @@ class AppFixturesIntegrationTest extends KernelTestCase
             ->getRepository(Task::class)->findAll();
 
         $this->assertSame(4, \count($users));
-        $this->assertSame(17, \count($tasks));
+        $this->assertSame(41, \count($tasks));
     }
 
     /**
@@ -85,8 +85,8 @@ class AppFixturesIntegrationTest extends KernelTestCase
             ]);
 
         $this->assertSame(2, \count($users));
-        $this->assertSame(3, \count($user1Tasks));
-        $this->assertSame(3, \count($user2Tasks));
+        $this->assertSame(12, \count($user1Tasks));
+        $this->assertSame(12, \count($user2Tasks));
     }
 
     /**
@@ -123,8 +123,8 @@ class AppFixturesIntegrationTest extends KernelTestCase
             ]);
 
         $this->assertSame(2, \count($admins));
-        $this->assertSame(3, \count($admin1Tasks));
-        $this->assertSame(3, \count($admin2Tasks));
+        $this->assertSame(6, \count($admin1Tasks));
+        $this->assertSame(6, \count($admin2Tasks));
     }
 
     /**
