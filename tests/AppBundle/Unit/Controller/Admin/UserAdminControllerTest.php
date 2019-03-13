@@ -6,7 +6,7 @@ use AppBundle\Controller\Admin\UserAdminController;
 use AppBundle\Entity\User;
 use AppBundle\Form\AdminUserEditType;
 use AppBundle\Form\UserType;
-use Doctrine\Common\Persistence\ObjectRepository;
+use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -31,23 +31,17 @@ class UserAdminControllerTest extends TestCase
      */
     public function testList()
     {
-        $objectRepository = $this->createMock(ObjectRepository::class);
-        $objectRepository->expects($this->once())
-            ->method('findAll');
+        $userRepository = $this->getUserRepositoryMock('findAll');
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
-            ->method('getRepository')
-            ->with('AppBundle:User')
-            ->willReturn($objectRepository);
 
         $twig = $this->getTwigMock(true, 'admin/user/list.html.twig', [
-            'users' => null,
+            'users' => [],
         ]);
 
         $controller = new UserAdminController($twig, $entityManager);
 
-        $this->assertInstanceOf(Response::class, $controller->listAction());
+        $this->assertInstanceOf(Response::class, $controller->listAction($userRepository));
     }
 
     /**
@@ -306,5 +300,24 @@ class UserAdminControllerTest extends TestCase
             ->willReturn('/');
 
         return $routerMock;
+    }
+
+    /**
+     * This helper method mocks UserRepository
+     * and checks that a method is correctly called.
+     *
+     * @param string $method
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|UserRepository
+     */
+    private function getUserRepositoryMock(string $method)
+    {
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())
+            ->method($method);
+
+        return $userRepository;
     }
 }
