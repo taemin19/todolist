@@ -1,6 +1,9 @@
 language: php
 sudo: false
 
+services:
+  - redis-server
+
 cache:
   directories:
     - $HOME/.composer/cache/files
@@ -18,6 +21,7 @@ before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - service redis-server start --bind 127.0.0.1
 
 install:
   - composer install
