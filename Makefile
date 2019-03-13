@@ -5,15 +5,18 @@ help:
 	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-10s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 ## Main commands
-dev: ## Install the app a development environment
+dev: ## Install the app for a development environment
 	composer install
 	yarn install
 	make encore--dev
 
 prod: ## Install the app for a production environment
-	compser install --no-dev --optimize-autoloader
+	composer install --no-dev --optimize-autoloader
 	yarn install
 	make encore--prod
+
+info: ## Displays information about the app
+	php bin/console about
 
 encore--dev: ## Compile assets for development
 	yarn run encore dev
@@ -21,10 +24,10 @@ encore--dev: ## Compile assets for development
 encore--prod: ## Compile assets and minify them for production
 	yarn run encore production
 
-auto: composer.json ## Update the autoloader
+autoload: composer.json ## Update the autoloader
 	composer dump-autoload -a -o
 
-## Database commands
+## Doctrine commands
 db: ## Create the database and add tables/schema
 	php bin/console doctrine:database:create
 	make db-u
@@ -42,9 +45,26 @@ db-v: ## Validate mapping/database
 db-f: src/AppBundle/DataFixtures ## Load a "fake" set data into the database
 	php bin/console doctrine:fixtures:load
 
+doctrine-cache: var/cache ## Clear Doctrine cache
+	make doctrine-cache-q
+	make doctrine-cache-m
+	make doctrine-cache-r
+
+doctrine-cache-q: var/cache ## Clear the queries cache in doctrine
+	php bin/console doctrine:cache:clear-query
+
+doctrine-cache-m: var/cache ## Clear the metadatas cache in doctrine
+	php bin/console doctrine:cache:clear-metadata
+
+doctrine-cache-r: var/cache ## Clear the results cache in doctrine
+	php bin/console doctrine:cache:clear-result
+
+redis-cache: ## Clear the redis cache
+	php bin/console redis:flushdb
+
 ## Symfony commands
-cache: var/cache ## Clear the cache in the current environment
-	php bin/console cache:clear
+cache: var/cache ## Clear the cache folder
+	rm -rf ./var/cache/*
 
 cache--dev: var/cache/dev ## Clear the cache in the dev environment
 	php bin/console cache:clear --env=dev
