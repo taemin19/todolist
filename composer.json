@@ -42,7 +42,7 @@
         "friendsofphp/php-cs-fixer": "^2.13",
         "fzaninotto/faker": "^1.8",
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
         "symfony-scripts": [
