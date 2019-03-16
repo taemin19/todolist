@@ -10,9 +10,21 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixturesIntegrationTest extends KernelTestCase
 {
-    public function setUp()
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
     {
-        self::bootKernel();
+        $kernel = self::bootKernel();
+
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
     }
 
     /**
@@ -23,16 +35,16 @@ class AppFixturesIntegrationTest extends KernelTestCase
     {
         $this->executeLoad();
 
-        $container = self::$kernel->getContainer();
+        $users = $this->entityManager
+            ->getRepository(User::class)
+            ->findAll();
 
-        $users = $container->get('doctrine')
-            ->getRepository(User::class)->findAll();
-
-        $tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findAll();
+        $tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findAll();
 
         $this->assertSame(4, \count($users));
-        $this->assertSame(17, \count($tasks));
+        $this->assertSame(41, \count($tasks));
     }
 
     /**
@@ -43,10 +55,9 @@ class AppFixturesIntegrationTest extends KernelTestCase
     {
         $this->executeLoad('Tasks');
 
-        $container = self::$kernel->getContainer();
-
-        $tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findAll();
+        $tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findAll();
 
         $this->assertSame(5, \count($tasks));
     }
@@ -59,34 +70,37 @@ class AppFixturesIntegrationTest extends KernelTestCase
     {
         $this->executeLoad('Users');
 
-        $container = self::$kernel->getContainer();
+        $users = $this->entityManager
+            ->getRepository(User::class)
+            ->findAll();
 
-        $users = $container->get('doctrine')
-            ->getRepository(User::class)->findAll();
-
-        $user1 = $container->get('doctrine')
-            ->getRepository(User::class)->findOneBy([
+        $user1 = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([
                 'username' => 'User1',
             ]);
 
-        $user1Tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findBy([
+        $user1Tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findBy([
                 'user' => $user1,
             ]);
 
-        $user2 = $container->get('doctrine')
-            ->getRepository(User::class)->findOneBy([
+        $user2 = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([
                 'username' => 'User2',
             ]);
 
-        $user2Tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findBy([
+        $user2Tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findBy([
                 'user' => $user2,
             ]);
 
         $this->assertSame(2, \count($users));
-        $this->assertSame(3, \count($user1Tasks));
-        $this->assertSame(3, \count($user2Tasks));
+        $this->assertSame(12, \count($user1Tasks));
+        $this->assertSame(12, \count($user2Tasks));
     }
 
     /**
@@ -97,34 +111,37 @@ class AppFixturesIntegrationTest extends KernelTestCase
     {
         $this->executeLoad('Admins');
 
-        $container = self::$kernel->getContainer();
+        $admins = $this->entityManager
+            ->getRepository(User::class)
+            ->findAll();
 
-        $admins = $container->get('doctrine')
-            ->getRepository(User::class)->findAll();
-
-        $admin1 = $container->get('doctrine')
-            ->getRepository(User::class)->findOneBy([
+        $admin1 = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([
                 'username' => 'Admin1',
             ]);
 
-        $admin1Tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findBy([
+        $admin1Tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findBy([
                 'user' => $admin1,
             ]);
 
-        $admin2 = $container->get('doctrine')
-            ->getRepository(User::class)->findOneBy([
+        $admin2 = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([
                 'username' => 'Admin2',
             ]);
 
-        $admin2Tasks = $container->get('doctrine')
-            ->getRepository(Task::class)->findBy([
+        $admin2Tasks = $this->entityManager
+            ->getRepository(Task::class)
+            ->findBy([
                 'user' => $admin2,
             ]);
 
         $this->assertSame(2, \count($admins));
-        $this->assertSame(3, \count($admin1Tasks));
-        $this->assertSame(3, \count($admin2Tasks));
+        $this->assertSame(6, \count($admin1Tasks));
+        $this->assertSame(6, \count($admin2Tasks));
     }
 
     /**

@@ -56,11 +56,22 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
 
-            // create 3 tasks for User1 and 3 tasks for User2
-            for ($j = 1; $j <= 3; ++$j) {
+            // create 6 tasks for User1 and 6 tasks for User2
+            for ($j = 1; $j <= 6; ++$j) {
                 $task = new Task();
                 $task->setTitle('User'.$i.'Task'.$j);
                 $task->setContent($this->faker->text(100));
+                $task->setUser($user);
+
+                $manager->persist($task);
+            }
+
+            // create 6 tasks as done for User1 and 6 tasks as done for User2
+            for ($j = 7; $j <= 12; ++$j) {
+                $task = new Task();
+                $task->setTitle('User'.$i.'Task'.$j);
+                $task->setContent($this->faker->text(100));
+                $task->toggle(true);
                 $task->setUser($user);
 
                 $manager->persist($task);
@@ -85,8 +96,8 @@ class AppFixtures extends Fixture
 
             $manager->persist($admin);
 
-            // create 3 tasks for Admin1 and 3 tasks for Admin2
-            for ($j = 1; $j <= 3; ++$j) {
+            // create 6 tasks for Admin1 and 6 tasks for Admin2
+            for ($j = 1; $j <= 6; ++$j) {
                 $task = new Task();
                 $task->setTitle('Admin'.$i.'Task'.$j);
                 $task->setContent($this->faker->text(100));

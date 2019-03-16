@@ -6,7 +6,7 @@ use AppBundle\Controller\Admin\UserAdminController;
 use AppBundle\Entity\User;
 use AppBundle\Form\AdminUserEditType;
 use AppBundle\Form\UserType;
-use Doctrine\Common\Persistence\ObjectRepository;
+use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -25,42 +25,36 @@ class UserAdminControllerTest extends TestCase
      * and checks that the methods are correctly called.
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function testList()
     {
-        $objectRepository = $this->createMock(ObjectRepository::class);
-        $objectRepository->expects($this->once())
-            ->method('findAll');
+        $userRepository = $this->getUserRepositoryMock('findAll');
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects($this->once())
-            ->method('getRepository')
-            ->with('AppBundle:User')
-            ->willReturn($objectRepository);
 
         $twig = $this->getTwigMock(true, 'admin/user/list.html.twig', [
-            'users' => null,
+            'users' => [],
         ]);
 
         $controller = new UserAdminController($twig, $entityManager);
 
-        $this->assertInstanceOf(Response::class, $controller->listAction());
+        $this->assertInstanceOf(Response::class, $controller->listAction($userRepository));
     }
 
     /**
      * This test checks that the method createAction() is correctly returned
      * and checks that the methods are correctly called or not.
      *
-     * @param string $className
      * @param bool   $formIsSubmitted
+     * @param string $className
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @dataProvider provideFormIsSubmitted
      */
     public function testCreate(bool $formIsSubmitted, string $className)
@@ -94,13 +88,13 @@ class UserAdminControllerTest extends TestCase
      * This test checks that the method EditAction() is correctly returned
      * and checks that the methods are correctly called or not.
      *
-     * @param string $className
      * @param bool   $formIsSubmitted
+     * @param string $className
      *
      * @throws \ReflectionException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @dataProvider provideFormIsSubmitted
      */
     public function testEdit(bool $formIsSubmitted, string $className)
@@ -156,7 +150,7 @@ class UserAdminControllerTest extends TestCase
      */
     private function getTwigMock(bool $callRender, string $template = '', array $parameters = [])
     {
-        $twigMock = $this->createMock(\Twig_Environment::class);
+        $twigMock = $this->createMock(\Twig\Environment::class);
         $twigMock->expects($callRender ? $this->once() : $this->never())
             ->method('render')
             ->with($template, $parameters);
@@ -306,5 +300,24 @@ class UserAdminControllerTest extends TestCase
             ->willReturn('/');
 
         return $routerMock;
+    }
+
+    /**
+     * This helper method mocks UserRepository
+     * and checks that a method is correctly called.
+     *
+     * @param string $method
+     *
+     * @throws \ReflectionException
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|UserRepository
+     */
+    private function getUserRepositoryMock(string $method)
+    {
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())
+            ->method($method);
+
+        return $userRepository;
     }
 }

@@ -22,3 +22,15 @@ services:
     AppBundle\Controller\:
         resource: '../../src/AppBundle/Controller'
         tags: ['controller.service_arguments']
+
+    task.listener:
+        class: AppBundle\EventListener\TaskListener
+        arguments:
+            - "@snc_redis.doctrine"
+        tags: { name: doctrine.orm.entity_listener }
+
+    user.listener:
+        class: AppBundle\EventListener\UserListener
+        arguments:
+            - "@snc_redis.doctrine"
+        tags: { name: doctrine.orm.entity_listener }
